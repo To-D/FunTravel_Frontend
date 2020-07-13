@@ -1,10 +1,12 @@
 <template>
-    <p> 我进来啦! </p>
+<div>
+</div>
+
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'Login',
   data () {
     return {
       
