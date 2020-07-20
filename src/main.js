@@ -3,6 +3,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 
+//element-ui
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
@@ -48,7 +49,20 @@ axios.interceptors.response.use(
     }
 )
 
-Vue.config.productionTip = false
+// md5
+import md5 from 'js-md5';
+Vue.prototype.$md5 = md5;
+
+Vue.prototype.notify = function(type, msg) {
+        this.$message({
+            center: true,
+            dangerouslyUseHTMLString: true,
+            type: type,
+            message: '<strong style="color:teal">' + msg + '</strong>',
+        });
+    },
+
+    Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({

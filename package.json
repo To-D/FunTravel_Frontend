@@ -12,7 +12,9 @@
   "dependencies": {
     "axios": "^0.19.2",
     "element-ui": "^2.13.2",
+    "js-md5": "^0.7.3",
     "vue": "^2.5.2",
+    "vue-owl-carousel": "^2.0.3",
     "vue-router": "^3.0.1",
     "vuex": "^3.5.1"
   },

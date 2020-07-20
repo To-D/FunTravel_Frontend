@@ -12,10 +12,24 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+
+}
+
+a{
+    text-decoration: none;  
+    color:#f48840;
+}
+
+.router-link-active {
+  text-decoration: none;
+  color:#1e1e1e
+}
+body{
+  margin:0px;
 }
 </style>

@@ -1,73 +1,108 @@
 <template>
 <div>
-  <el-form
-    @submit.native.prevent
-    status-icon
-    :model="loginForm"
-    :rules="rules"
-    class="login_container"
-    label-position="left"
-    label-width="0px"
-    v-loading="loading"
-  >
-    <el-form-item prop="username" size="medium" >
-      <el-input
-        size="medium"
-        type="text"
-        v-model="loginForm.username"
-        auto-complete="off"
-        placeholder="Username/Email"
-      ></el-input>
-    </el-form-item>
+  <el-row>
+  <el-col :span="11">
+    <img src="../assets/images/welcome.jpg" alt="Image"/>
+  </el-col>
 
-    <el-form-item prop="password" size="medium">
-      <el-input
-        size="medium"
-        type="password"
-        v-model="loginForm.password"
-        auto-complete="off"
-        placeholder="Password"
-      ></el-input>
-    </el-form-item>
+  <el-col :span="13">
+    <div class="loginFormContainer">
+      <logo></logo>
+      <h3>LOG IN</h3>
+    <el-form
+      @submit.native.prevent
+      status-icon
+      :model="loginForm"
+      :rules="rules"
+      label-position="left"
+      v-loading="loading"
+    >
+      <el-form-item prop="user" size="medium" >
+        <el-input
+          size="medium"
+          type="text"
+          v-model="loginForm.user"
+          auto-complete="off"
+          placeholder="Username/Email"
+        ></el-input>
+      </el-form-item>
 
-    <el-form-item size="medium">
-      <el-button
-        native-type="submit"
-        :disabled ="isDisabled"
-        size="medium"
-        type="primary"
-        style="width:100% "
-        v-on:click="login"
-      >Sign In</el-button>
-    </el-form-item>
-  </el-form>
-  
-  <div class="text-center text-small text-muted">
-    <span>
-      Don't have an account yet?
-      <router-link to="register">Create one</router-link>
-    </span>
+      <el-form-item prop="password" size="medium">
+        <el-input
+          size="medium"
+          type="password"
+          v-model="loginForm.password"
+          auto-complete="off"
+          placeholder="Password"
+        ></el-input>
+      </el-form-item>
+
+      <el-form-item prop="code" size="medium">
+        <el-col :span="12">
+          <el-input
+            size="medium"
+            type="text"
+            v-model="loginForm.code"
+            auto-complete="off"
+            placeholder="Verification Code"
+          ></el-input>
+        </el-col>
+
+        <el-col :span="12">
+          <verification-code @refresh="getNewCode" ref="code"></verification-code>
+        </el-col>
+      </el-form-item>
+
+      <el-form-item size="medium">
+        <el-button
+          native-type="submit"
+          :disabled ="isDisabled"
+          size="medium"
+          type="warning"
+          style="width:100% "
+          v-on:click="login"
+        >Log In</el-button>
+      </el-form-item>
+    </el-form>
+    
+    <div >
+      <span>
+        Don't have an account yet?
+        <router-link to="register">Create one</router-link>
+      </span>
+    </div>
   </div>
+  </el-col>
+</el-row>
 </div>
+
 </template>
 
 <script>
+import logo from "../components/Logo";
+import VerificationCode from "../components/VerificationCode";
+
 export default {
   name: 'Login',
+  components: {logo,VerificationCode},
   data () {
     return {
+      identifyCode:'',
       loginForm: {
-          username: "",
-          password: ""
+          user: "",
+          password: "",
+          code:""
         },
         rules: {
-          username: [
-            {required:true,message:"Username is required",blur:"change"},
-            {pattern:/^[a-zA-Z-][a-zA-Z0-9-_]{4,31}$/,message:"Invalid username/email",blur:"change"}
+          user: [
+            {required:true,message:"Username or email is required",blur:"change"}
           ],
           password: [
             {required:true, message:"Password is required", blur:"change"},
-            {pattern:/^[\w-]{6,32}$/, message:"Invalid password",blur:"change"},
+             {pattern:/^[\w~!@#$%^&*()_+`\-={}:";'<>?,.\/]{6,12}$/, message:"Invalid password",blur:"change"},
+          ],
+          code:[
+            {required:true, message:"Verification code is required", blur:"change"},
           ]
         },
         loading: false,
@@ -75,58 +110,59 @@ export default {
   },
   computed:{
     isDisabled(){
-      return (this.loginForm.username == "") || (this.loginForm.password =="");
+      return (this.loginForm.user == "") ||
+             (this.loginForm.password =="") ||
+             (this.loginForm.code =="") ||
+              !/^[\w~!@#$%^&*()_+`\-={}:";'<>?,.\/]{6,12}$/.test(this.loginForm.password);
     }
   },
   methods:{
-        login() {
-        // Turn to loading mode when the form is submitted,and come back when getting response
-        this.loading = true;
-        this.$axios
-          .post("/login", {
-            username: this.loginForm.username,
-            password: this.loginForm.password
-          })
-          .then(resp => {
-            if (resp.status === 200 && resp.data.hasOwnProperty("token")) {
-              //Save token
-              this.$store.commit("login", resp.data);
-              this.$message({
-                dangerouslyUseHTMLString: true,
-                type:'success',
-                message: '<strong style="color:teal">Welcome back!</strong>',
-                center:true
-              });
-              this.$router.replace({ path: "/" });            
-            } else {
-              this.errorNotification();
-              this.loading = false;
-            }
-          })
-          .catch(error => {
-            console.log(error);
-            this.errorNotification();
+    getNewCode(code){
+      this.identifyCode = code;
+    },
+    login() {
+      this.loading = true;
+      if(this.identifyCode.toUpperCase() != this.loginForm.code.toUpperCase()){
+        this.notify('error','Wrong verification code!');
+        this.$refs.code.$el.click();
+        this.loading = false;
+        return;
+      }
+
+      this.$axios
+        .post("/login", {
+          user: this.loginForm.user,
+          password: this.$md5(this.loginForm.password),
+        })
+        .then(resp => {
+          if (resp.status === 200 && resp.data.hasOwnProperty("token")) {
+            //Save token
+            this.$store.commit("login", resp.data);
+            this.notify('success','Welcome back!');
+            this.$router.replace({ path: "/" });            
+          } else {
+            this.notify('error','Username/Email or password is wrong!');
             this.loading = false;
-          });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          this.notify('error','Username/Email or password is wrong!');
+          this.loading = false;
+        });
       }
-      }
+    },
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
+img{
+  width:80%;
+  height:750px;
+  margin-top:5px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.loginFormContainer{
+  padding:100px 100px 0 100px;
 }
 </style>
