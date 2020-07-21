@@ -1,25 +1,20 @@
 <template>
 <div>
   <navbar></navbar>
-  <div id="container">
+  <div id="carousal_container">
   <carousel
   :margin="18"
   :autoplay="true"
   :loop="true"
   :dots="false"
-  :nav="false"
+  :nav="true"
+  :navText="['‹','›']"
+  :autoplayHoverPause="true"
   >
-    <div class="img_container">
-        <img src="../assets/images/picture1.jpg">
-    </div>
-    <div class="img_container">
-            <img src="../assets/images/picture2.jpg">
-    </div>
-    <div class="img_container">
-        <img src="../assets/images/picture3.jpg">
-    </div>
-    <div class="img_container">
-            <img src="../assets/images/picture4.jpg">
+    <div v-for="i in 4 " :key="i">
+      <div class="img_container">
+          <img src="../assets/images/picture1.jpg">
+      </div>
     </div>
   </carousel>
   </div>
@@ -48,9 +43,10 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-#container{
-    padding:0 9px 0 15px;
+<style>
+#carousal_container{
+    padding:10px 16px;
+    margin-left:2px;
 }
  .img_container{
     height:404.3px;
@@ -59,5 +55,38 @@ export default {
 img{
     width:100%;
     height:100%;
+}
+
+.owl-theme .owl-nav [class*='owl-'] {
+    color: #fff;
+    font-size: 36px;
+    width: 60px;
+    height: 60px;
+    padding:0px;
+    margin:0px;
+    display: inline-block;
+    text-align: center;
+    line-height: 60px;
+    background-color: rgba(250, 250, 250, 0.3);
+}
+
+.owl-theme .owl-nav [class*='owl-']:hover{
+    background-color: rgba(250, 250, 250, 0.4);
+}
+
+.owl-theme .owl-nav {
+    position: absolute;
+    top: 36%;
+    width: 100%;
+}
+
+.owl-theme .owl-nav .owl-prev {
+    position: absolute;
+    left: 40px;
+}
+
+.owl-theme .owl-nav .owl-next {
+    position: absolute;
+    right: 40px;
 }
 </style>
