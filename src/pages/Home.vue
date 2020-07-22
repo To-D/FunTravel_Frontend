@@ -65,6 +65,7 @@
           </div>
       </div>
     </el-col>
+
     <el-col :span="10" offset="2">
       <div class="img_container" >
           <img src="../assets/images/picture2.jpg" :alt="i" >
@@ -84,10 +85,7 @@
           </div>
       </div>
     </el-col>
-    </el-col>
   </el-row>
-
-</div>
 </div>
 </template>
 

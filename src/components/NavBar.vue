@@ -25,7 +25,7 @@
             <el-submenu index="3" v-else>
                 <template slot="title">
                     <el-badge is-dot="true" class="item"  >
-                        USERNAME
+                        {{username}}
                     </el-badge>
                 </template>
                 
@@ -35,7 +35,7 @@
                 <el-badge is-dot="true" class="item">
                 <el-menu-item index="2-3">My Friends</el-menu-item>
                 </el-badge>
-                <el-menu-item index="2-3">Logout</el-menu-item>
+                <el-menu-item index="2-3" @click="logout">Logout</el-menu-item>
             </el-submenu>
             
         </el-menu>
@@ -53,11 +53,28 @@ export default {
     data() {
       return {
         activeIndex: '1',
-        isLogin: false
+        isLogin: false,
+        username: "USERNAME"
       };
     },
-    methods: {
-
+    created(){
+        if(this.$store.state.token){
+            this.isLogin = true;
+            this.username = this.$store.state.username;
+        }
+    },
+    methods:{
+        logout(){
+            this.$confirm("Are you sure to sign out?", "Sign Out", {
+                confirmButtonText: "Yes",
+                cancelButtonText: "No"
+            })
+            .then(() => {
+                this.$store.commit("logout");
+                this.$router.push("/login");
+                this.notify("success","You have signed out!")
+            })
+        }
     }
   }
 </script>
@@ -74,7 +91,7 @@ export default {
 #menu .el-menu-item{
     font-weight:900;
 }
-#menu .el-submenu__title{
+#menu .el-submenu__title .el-badge{
     font-weight:900;
 }
 </style>

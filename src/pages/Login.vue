@@ -145,11 +145,11 @@ export default {
         })
         .then(resp => {
           console.log(resp);
-          if (resp.status === 200 && resp.data.hasOwnProperty("token")) {
+          if (resp.status === 200) {
             //Save token
-            this.$store.commit("login", resp.data);
-            this.notify('success','Welcome back!');
-            this.$router.replace({ path: "/" });            
+             this.$store.commit("login", resp.data);
+             this.notify('success','Welcome back!');
+             this.$router.replace({ path: "/" });
           } else {
             this.notify('error','Username/Email or password is wrong!');
             this.loading = false;

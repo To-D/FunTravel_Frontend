@@ -216,7 +216,7 @@ export default {
                 break;
               default:
                 //Save token
-                 this.$store.commit("login", resp.data);
+                this.$store.commit("login", {"token":resp.data,"username":this.registerForm.username});
                 this.notify('success','Welcome to FunTravel!');
                 this.$router.replace({ path: "/" });
             }            
