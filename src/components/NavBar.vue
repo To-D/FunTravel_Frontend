@@ -12,8 +12,12 @@
         active-text-color=" #f48840"
         text-color="#1e1e1e"
         >
-            <el-menu-item index="1" >HOME</el-menu-item>
-            <el-menu-item index="2" >SEARCH</el-menu-item>
+            <el-menu-item index="1" >
+                <router-link to="/">HOME</router-link>
+            </el-menu-item>
+            <el-menu-item index="2" >
+                <router-link to="/search">SEARCH</router-link>                
+            </el-menu-item>
             <el-menu-item index="3" v-if="!isLogin">
                 <router-link to="/login">LOGIN</router-link>
             </el-menu-item>

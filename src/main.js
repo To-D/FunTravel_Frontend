@@ -34,7 +34,6 @@ axios.interceptors.response.use(
         return response
     },
     error => {
-        console.log(error.response)
         if (error) {
             // 清除token 如果不是register/login, 跳转至login
             store.commit('logout')

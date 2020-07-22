@@ -103,6 +103,15 @@ export default {
           ],
           code:[
             {required:true, message:"Verification code is required", blur:"change"},
+            {
+            validator:(rule,value,callback)=>{
+              if(value.toUpperCase() != this.identifyCode.toUpperCase()) {
+                callback(new Error('Verification code error'));
+              }
+              callback();
+            },
+            trigger:"blur"
+            }
           ]
         },
         loading: false,
@@ -131,10 +140,11 @@ export default {
 
       this.$axios
         .post("/login", {
-          user: this.loginForm.user,
+          userIdentifier: this.loginForm.user,
           password: this.$md5(this.loginForm.password),
         })
         .then(resp => {
+          console.log(resp);
           if (resp.status === 200 && resp.data.hasOwnProperty("token")) {
             //Save token
             this.$store.commit("login", resp.data);

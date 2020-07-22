@@ -202,20 +202,29 @@ export default {
           email: this.registerForm.email,
           password: this.$md5(this.registerForm.password),
         })
-        .then(resp => {
-          if (resp.status === 200 && resp.data.hasOwnProperty("token")) {
-            //Save token
-            this.$store.commit("login", resp.data);
-            this.notify('success','Welcome to FunTravel!');
-            this.$router.replace({ path: "/" });            
-          } else {
-            this.notify('error','Username/Email or password is wrong!');
-            this.loading = false;
+        .then(resp => {          
+          if (resp.status === 200 ) {
+            console.log(resp);
+            switch(resp.data){
+              case "username duplicated":
+                this.notify('warning','Username duplicated!');
+                this.loading = false;
+                break;
+              case "email duplicated":
+                this.notify('warning','Email duplicated!');
+                this.loading = false;
+                break;
+              default:
+                //Save token
+                 this.$store.commit("login", resp.data);
+                this.notify('success','Welcome to FunTravel!');
+                this.$router.replace({ path: "/" });
+            }            
           }
         })
         .catch(error => {
           console.log(error);
-          this.notify('error','Username/Email or password is wrong!');
+          this.notify('error','Something error, try again later!');
           this.loading = false;
         });
       }
