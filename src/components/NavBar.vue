@@ -24,17 +24,19 @@
                         
             <el-submenu index="3" v-else>
                 <template slot="title">
-                    <el-badge is-dot="true" class="item"  >
+                    <el-badge :is-dot="true" class="item"  >
                         {{username}}
                     </el-badge>
                 </template>
                 
-                <el-menu-item index="2-1">My Favorite</el-menu-item>
-                <el-menu-item index="2-2">Upload</el-menu-item>
-                <el-menu-item index="2-3">My pictures</el-menu-item>
-                <el-badge is-dot="true" class="item">
-                <el-menu-item index="2-3">My Friends</el-menu-item>
-                </el-badge>
+                <el-menu-item index="2-1"><router-link to="/MyFavorite"> Favorite</router-link></el-menu-item>
+                <el-menu-item index="2-2"><router-link to="/Upload">Upload</router-link></el-menu-item>
+                <el-menu-item index="2-3"><router-link to="/MyPicture">My pictures</router-link></el-menu-item>                
+                <el-menu-item index="2-3">
+                    <el-badge :is-dot="true" class="item">
+                    <router-link to="/MyFriends">My Friends</router-link>
+                    </el-badge>
+                </el-menu-item>                
                 <el-menu-item index="2-3" @click="logout">Logout</el-menu-item>
             </el-submenu>
             

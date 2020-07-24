@@ -53,15 +53,19 @@ import md5 from 'js-md5';
 Vue.prototype.$md5 = md5;
 
 Vue.prototype.notify = function(type, msg) {
-        this.$message({
-            center: true,
-            dangerouslyUseHTMLString: true,
-            type: type,
-            message: '<strong style="color:teal">' + msg + '</strong>',
-        });
-    },
+    this.$message({
+        center: true,
+        dangerouslyUseHTMLString: true,
+        type: type,
+        message: '<strong style="color:teal">' + msg + '</strong>',
+    });
+};
 
-    Vue.config.productionTip = false
+// global constant
+import global from './components/GLOBAL'
+Vue.prototype.GLOBAL = global
+
+Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({

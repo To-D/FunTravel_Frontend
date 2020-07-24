@@ -9,15 +9,16 @@
   :autoplay="true"
   :loop="true"
   :dots="false"
-  :nav="true"
   :navText="['‹','›']"
   :autoplayHoverPause="true"
   :mouseDrag ="true"
   :autoplaySpeed="1000"
+  v-if="hottestPictures.length > 0"
+
   >
-    <div v-for="i in 4 " :key="i">
-      <div class="img_container" style="width:100%; position:relative;z-index:1;margin:0 auto; background: #000;">
-          <img src="../assets/images/picture4.jpg" :alt="i" style="width:100%; opacity:0.6; filter: alpha(opacity=60);">
+    <div v-for="img in hottestPictures" :key="img.id" >
+      <div class="img_container" >
+          <img :src="getImgSrc(img.url)" :alt="img.title">
           <!-- related information -->
           <div class="item-content">
               <div class="main-content">
@@ -45,11 +46,9 @@
     </el-col>
   </el-row>
 
-  <el-row>
-    <el-col :span="10" offset="1">
-      <div class="img_container" >
-          <img src="../assets/images/picture2.jpg" :alt="i">
-          <!-- related information -->
+  
+      <!-- <div class="img_container"  v-for="i in 4" :key="i">
+          <img :src="GLOBAL.baseUrl+'/images/picture4.jpg'" :alt="i">
           <div class="item-content">
               <div class="main-content">
                 <div class="meta-category">
@@ -63,29 +62,8 @@
                 </ul>
               </div>
           </div>
-      </div>
-    </el-col>
-
-    <el-col :span="10" offset="2">
-      <div class="img_container" >
-          <img src="../assets/images/picture2.jpg" :alt="i" >
-          <!-- related information -->
-          <div class="item-content">
-              <div class="main-content">
-                <div class="meta-category">
-                  <span>Nature</span>
-                </div>
-                <router-link to="pictureDetail"><h4>Donec porttitor augue at velit</h4></router-link>
-                <ul class="post-info">
-                  <li>Admin</li>
-                  <li>May 14, 2020</li>
-                  <li>24 Comments</li>
-                </ul>
-              </div>
-          </div>
-      </div>
-    </el-col>
-  </el-row>
+      </div> -->
+    
 </div>
 </template>
 
@@ -98,10 +76,37 @@ export default {
   components: { navbar,carousel},
   data () {
     return {
-        src:"../assets/images/picture1.jpg",
+      hottestPictures:[],
+      newestPictures:[]
     }
-    },
-    methods:{
+  },
+  methods:{
+    getImgSrc(url){
+      return this.GLOBAL.baseUrl +"/images/"+ url;
+    }
+  },
+  created(){
+    this.$axios
+    .post("/getHottestPictures")
+    .then(resp=>{
+      if(resp.status === 200){
+        this.hottestPictures = resp.data;
+      }
+    })
+    .catch(error=>{
+      console.log(error);
+    })
+
+    this.$axios
+    .post("/getNewestPictures")
+    .then(resp=>{
+      if(resp.status === 200){
+        this.newestPictures = resp.data;
+      }
+    })
+    .catch(error=>{
+      console.log(error);
+    })
   }
 }
 </script>
@@ -116,10 +121,16 @@ export default {
  .img_container{
     height:404.3px;
     width:467.2px;
+    /* position:relative; */
+    z-index:1;
+    margin:0 auto;
+    background: #000;
 } 
 img{
     width:100%;
     height:100%;
+    opacity:0.6; 
+    filter: alpha(opacity=60);
 }
 /* nav */
 .owl-theme .owl-nav [class*='owl-'] {
@@ -141,6 +152,9 @@ img{
     position: absolute;
     top: 36%;
     width: 100%;
+}
+.owl-carousel .owl-nav.disabled{
+  display:block !important;
 }
 .owl-theme .owl-nav .owl-prev {
     position: absolute;
