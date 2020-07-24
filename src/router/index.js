@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Home from '@/pages/Home'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
+import PictureDetail from '@/pages/PictureDetail'
+
 
 Vue.use(Router)
 
@@ -20,5 +22,10 @@ export default new Router({
         path: '/register',
         name: "Register",
         component: Register
+    }, {
+        // path: "/detail/:pictureID",
+        path: "/detail",
+        name: "PictureDetail",
+        component: PictureDetail
     }]
 })

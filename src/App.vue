@@ -21,7 +21,6 @@ export default {
 
 a{
     text-decoration: none;  
-    color:#f48840;
 }
 
 .router-link-active {

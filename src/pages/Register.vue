@@ -242,4 +242,8 @@ img{
 .formContainer{
   padding:70px 100px 0 100px;
 }
+
+a{
+  color:#f48840;
+}
 </style>

@@ -14,22 +14,20 @@
   :mouseDrag ="true"
   :autoplaySpeed="1000"
   v-if="hottestPictures.length > 0"
-
   >
     <div v-for="img in hottestPictures" :key="img.id" >
-      <div class="img_container" >
+      <div class="hot_img_container">
           <img :src="getImgSrc(img.url)" :alt="img.title">
-          <!-- related information -->
           <div class="item-content">
               <div class="main-content">
                 <div class="meta-category">
-                  <span>Nature</span>
+                  <span>THEME</span>
                 </div>
-                <router-link to="pictureDetail"><h4>Donec porttitor augue at velit</h4></router-link>
+                <router-link to="pictureDetail"><h4>Title</h4></router-link>
                 <ul class="post-info">
-                  <li>Admin</li>
-                  <li>May 14, 2020</li>
-                  <li>24 Comments</li>
+                  <li>Author</li>
+                  <li>May 14, 2020(update time)</li>
+                  <li>24 Comments(comments count)</li>
                 </ul>
               </div>
           </div>
@@ -38,42 +36,103 @@
   </carousel>
   </div>
 
+  <!-- middle -->
   <el-row>
-    <el-col :span="12" :offset="6">
+    <el-col :span="18" :offset="3">
       <div class="middle">
         <h4><span>NEWEST</span> PICTURE</h4>
       </div>
     </el-col>
   </el-row>
 
-  
-      <!-- <div class="img_container"  v-for="i in 4" :key="i">
-          <img :src="GLOBAL.baseUrl+'/images/picture4.jpg'" :alt="i">
-          <div class="item-content">
-              <div class="main-content">
-                <div class="meta-category">
-                  <span>Nature</span>
-                </div>
-                <router-link to="pictureDetail"><h4>Donec porttitor augue at velit</h4></router-link>
+  <el-row>
+    <!-- Newest pictures -->
+    <el-col :span="18" :offset="3">
+      <el-col :span="16">        
+        <div class="container" v-for="i in 3" :key='i' >
+            <div class="img_container">
+                <img src="../assets/images/picture2.jpg" />
+            </div>
+            <div class="text_container">
+              <span>THEME</span>
+                <h4>Title</h4> 
                 <ul class="post-info">
-                  <li>Admin</li>
-                  <li>May 14, 2020</li>
-                  <li>24 Comments</li>
+                  <li>AUTHOR</li>
+                  <li>May 31, 2020(release time)</li>
+                  <li>12 Comments(comments_count)</li>
                 </ul>
+                <!-- <p>Stand Blog is a free HTML CSS template for your CMS theme. You can easily adapt or customize it for any kind of CMS or website builder. You are allowed to use it for your business. You are NOT allowed to re-distribute the template ZIP file on any template collection site for the download purpose. <a rel="nofollow" href="https://templatemo.com/contact" target="_parent">Contact TemplateMo</a> for more info. Thank you.</p>
+                    <div class="post-options">
+                        <el-row>
+                            <el-col :span="12">
+                                <ul class="post-tags">
+                                    <li><i class="el-icon-discount"></i></li>
+                                    <li><a href="#">Beauty</a>,</li>
+                                    <li><a href="#">Nature</a></li>
+                                </ul>
+                            </el-col>
+                            <div class="col-6">
+                                <ul class="post-share">
+                                    <li><i class="el-icon-share"></i></li>
+                                    <li><a href="#">Facebook</a>,</li>
+                                    <li><a href="#"> Twitter</a></li>
+                                </ul>
+                            </div>
+                        </el-row>
+                    </div> -->
+                </div>
+            </div>                                
+      </el-col>   
+
+    <!-- side bar -->
+    <el-col :span="8">
+      <div class="sidebar">
+          <el-row>
+            <el-col :span="24">
+              <div class="sidebar-item search">
+                <form id="search_form" name="gs" method="GET" action="#">
+                  <input type="text" name="q" class="searchText" placeholder="type to search..." autocomplete="on">
+                </form>
               </div>
-          </div>
-      </div> -->
-    
+            </el-col>
+                <el-col :span="24">
+                  <div class="sidebar-item tags">
+                    <div class="sidebar-heading">
+                      <h2>Tag Clouds</h2>
+                    </div>
+                    <div class="content">
+                      <ul>
+                        <li><a href="#">Lifestyle</a></li>
+                        <li><a href="#">Creative</a></li>
+                        <li><a href="#">HTML5</a></li>
+                        <li><a href="#">Inspiration</a></li>
+                        <li><a href="#">Motivation</a></li>
+                        <li><a href="#">PSD</a></li>
+                        <li><a href="#">Responsive</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </el-col>
+              </el-row>
+            </div>      
+    </el-col>
+
+  </el-col>
+  </el-row>
+  <!-- footer -->
+  <foot></foot>
 </div>
 </template>
 
 <script>
 import navbar from "../components/NavBar";
 import carousel from 'vue-owl-carousel'
+import ShowPicture from "../components/ShowPicture"
+import foot from "../components/Footer"
 
 export default {
   name: 'Home',
-  components: { navbar,carousel},
+  components: { navbar,carousel,ShowPicture,foot},
   data () {
     return {
       hottestPictures:[],
@@ -85,6 +144,7 @@ export default {
       return this.GLOBAL.baseUrl +"/images/"+ url;
     }
   },
+  
   created(){
     this.$axios
     .post("/getHottestPictures")
@@ -116,9 +176,10 @@ export default {
 #carousal_container{
     padding:10px 16px;
     margin-left:2px;
+    margin-top:110px;
 }
 /* image */
- .img_container{
+ .hot_img_container{
     height:404.3px;
     width:467.2px;
     /* position:relative; */
@@ -126,7 +187,7 @@ export default {
     margin:0 auto;
     background: #000;
 } 
-img{
+.hot_img_container img{
     width:100%;
     height:100%;
     opacity:0.6; 
@@ -227,5 +288,128 @@ ul {
 }
 .middle span{
   color:#f48840;
+}
+
+.container{
+    display:inline-block;
+    margin: 10px 0;
+    /* border: 1px solid #eee; */
+}
+
+.img_container{
+    width:700px;
+    height:300px;
+}
+.img_container img{
+    width:100%;
+    height:100%;
+    object-fit: cover;
+}
+
+.text_container{
+    text-align: left;
+    padding:40px;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.text_container span{
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 900;
+    color: #f48840;
+}
+.text_container h4{
+    font-size: 20px;
+    letter-spacing: 0.25px;
+    margin: 10px 0px 12px 0px;
+}
+
+.text_container li{
+    display: inline-block;
+    margin-right: 8px;
+    font-size: 14px;
+    color: #aaa ;
+    font-weight: 400;
+    transition: all .3s;
+}
+.text_container .post-info li::after{content: '|';
+    color: #aaa;
+    margin-left: 8px;
+}
+.text_container li:last-child::after{
+    display: none;
+}
+
+.text_container p{
+    padding: 25px 0px;
+    margin: 25px 0px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    font-size: 15px;
+    font-weight: 400;
+    color: #7a7a7a;
+    line-height: 30px;
+}
+.post-options ul li a{
+    color: #aaa;
+}
+i{
+    color: #f48840;
+}
+
+/* side bar */
+.sidebar{
+  margin-left: 20px;
+  margin-top:10px;
+  text-align: left;
+}
+
+.sidebar input{
+  width: 318px;
+  height: 50px;
+  border: 1px solid #eee;
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #7a7a7a;
+  outline: none;
+  padding-left:15px;
+}
+
+.sidebar .sidebar-item {
+  margin-top:50px;
+}
+.sidebar h2{
+  font-size: 18px;
+    text-transform: uppercase;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: #20232e;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+.sidebar .tags ul li{
+  margin-bottom: 10px;
+  margin-right: 6px;
+  display: inline-block;
+}
+.sidebar .tags ul li:hover{
+  background-color: #f48840;
+}
+.sidebar .tags ul li a{
+    font-size: 15px;
+    font-weight: 500;
+    color: #aaa;
+    display: inline-block;
+    border: 1px solid #eee;
+    padding: 10px 18px;
+    transition: all .3s;
+}
+.sidebar .tags ul li a:hover{
+  color:#fff
 }
 </style>

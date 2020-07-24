@@ -84,6 +84,12 @@ export default {
 <style scoped>
 .el-row{
     background-color: #f7f7f7;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:999;
+    box-shadow: 0px 2px 10px rgba(0,0,0,0.2);
 }
 #menu{
     padding:25px 0 0 500px;

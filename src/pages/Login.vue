@@ -173,6 +173,9 @@ img{
   height:750px;
   margin-top:5px;
 }
+a{
+  color:#f48840;
+}
 .loginFormContainer{
   padding:100px 100px 0 100px;
 }
