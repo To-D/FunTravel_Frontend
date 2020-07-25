@@ -246,4 +246,8 @@ img{
 a{
   color:#f48840;
 }
+
+h3{
+  text-align: center;
+}
 </style>

@@ -179,4 +179,7 @@ a{
 .loginFormContainer{
   padding:100px 100px 0 100px;
 }
+h3{
+  text-align: center;
+}
 </style>

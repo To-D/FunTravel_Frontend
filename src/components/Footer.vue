@@ -24,7 +24,7 @@
             <h2>COPYRIGHT</h2>
             <div class="copyright-text">
               <p>Copyright 2020</p>
-              <p> Design By Jaxon</p>
+              <p> Design By <span>Jaxon</span></p>
               <p> Fudan University</p>
             </div>
           </el-col>
@@ -54,8 +54,7 @@ footer h2{
 footer ul.map {
     list-style: none;   
     padding: 0 100px;
-    /* margin-right: 60px; */
-    border-right: 1px solid #fff;
+    
 }
 
 footer ul.map {
@@ -70,6 +69,7 @@ footer ul.map li a {
     font-weight: 500;
     letter-spacing: 0.25px;
     transition: all .3s;
+    line-height: 2em;
 }
 footer p {
     font-size: 13px;
@@ -77,6 +77,12 @@ footer p {
     color: #fff;
     margin-bottom: 0px;
     font-weight: 400;
-    line-height: 30px;
+    line-height: 2em;
+}
+footer span{
+    color:#f48840;
+}
+.copyright-text{
+    border-left: 1px solid #fff;
 }
 </style>

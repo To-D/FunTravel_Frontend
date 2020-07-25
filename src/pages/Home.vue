@@ -20,14 +20,11 @@
           <img :src="getImgSrc(img.url)" :alt="img.title">
           <div class="item-content">
               <div class="main-content">
-                <div class="meta-category">
-                  <span>THEME</span>
-                </div>
-                <router-link to="pictureDetail"><h4>Title</h4></router-link>
+                <router-link :to="'picture-detail/'+img.id" ><h4>{{img.title}}</h4></router-link>
                 <ul class="post-info">
-                  <li>Author</li>
-                  <li>May 14, 2020(update time)</li>
-                  <li>24 Comments(comments count)</li>
+                  <li>{{img.author}}</li>
+                  <li>May 14, 2020</li>
+                  <li>{{img.collectionCount}} Likes</li>
                 </ul>
               </div>
           </div>
@@ -60,26 +57,7 @@
                   <li>AUTHOR</li>
                   <li>May 31, 2020(release time)</li>
                   <li>12 Comments(comments_count)</li>
-                </ul>
-                <!-- <p>Stand Blog is a free HTML CSS template for your CMS theme. You can easily adapt or customize it for any kind of CMS or website builder. You are allowed to use it for your business. You are NOT allowed to re-distribute the template ZIP file on any template collection site for the download purpose. <a rel="nofollow" href="https://templatemo.com/contact" target="_parent">Contact TemplateMo</a> for more info. Thank you.</p>
-                    <div class="post-options">
-                        <el-row>
-                            <el-col :span="12">
-                                <ul class="post-tags">
-                                    <li><i class="el-icon-discount"></i></li>
-                                    <li><a href="#">Beauty</a>,</li>
-                                    <li><a href="#">Nature</a></li>
-                                </ul>
-                            </el-col>
-                            <div class="col-6">
-                                <ul class="post-share">
-                                    <li><i class="el-icon-share"></i></li>
-                                    <li><a href="#">Facebook</a>,</li>
-                                    <li><a href="#"> Twitter</a></li>
-                                </ul>
-                            </div>
-                        </el-row>
-                    </div> -->
+                </ul>                
                 </div>
             </div>                                
       </el-col>   
@@ -234,18 +212,20 @@ export default {
     text-align: left;
 }
 
-.owl-theme .owl-item .item-content .meta-category span {
+/* .owl-theme .owl-item .item-content .meta-category span {
     color: #f48840;
     font-size: 18px;
     text-transform: uppercase;
     font-weight: 900;
     letter-spacing: 0.25px;
     text-align: left;
-}
+} */
 .owl-theme .owl-item .item-content h4 {
+    text-align: left;
+    color: #f48840;
+    text-transform: uppercase;
     font-size: 24px;
     font-weight: 900;
-    color: #fff;
     letter-spacing: 0.5px;
     text-transform: capitalize;
     margin: 10px 0px 12px 0px;
@@ -284,6 +264,7 @@ ul {
     background-size: cover;
     color:#fff;
     font-size:25px;
+    text-align: center;
     
 }
 .middle span{
@@ -384,13 +365,14 @@ i{
 }
 .sidebar h2{
   font-size: 18px;
-    text-transform: uppercase;
-    font-weight: 900;
-    letter-spacing: 0.5px;
-    color: #20232e;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 15px;
-    margin-bottom: 25px;
+  text-align: left;
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  color: #20232e;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 25px;
 }
 .sidebar .tags ul li{
   margin-bottom: 10px;

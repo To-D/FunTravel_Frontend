@@ -23,8 +23,7 @@ export default new Router({
         name: "Register",
         component: Register
     }, {
-        // path: "/detail/:pictureID",
-        path: "/detail",
+        path: "/picture-detail/:pictureID",
         name: "PictureDetail",
         component: PictureDetail
     }]
