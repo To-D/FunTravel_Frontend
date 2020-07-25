@@ -23,8 +23,8 @@
                     </el-col>
                     <el-col :span="8" class="collectionIcon">
                         <br>
-                        <span @click="collect" v-if="!isCollected"><i class="el-icon-star-off" style="font-size:30px"></i></span>
-                        <span @click="cancelCollect" v-else><i class="el-icon-star-on" style="font-size:30px"></i></span>
+                        <span @click="collect" v-if="!isCollected"><i class="el-icon-star-off" ></i></span>
+                        <span @click="cancelCollect" v-else><i class="el-icon-star-on" ></i></span>
                     </el-col>
                     </el-row>
                     
@@ -137,6 +137,19 @@ export default {
     },
     created(){
         this.getPictureDetail();
+        // this.$axios
+        // .post("/isCollected",{
+        //     username:this.$store.state.username,
+        //     pictureId:this.picture.id
+        // })
+        // .then(resp=>{
+        //     if(resp.status === 200){                
+        //         this.isCollected = resp.data;
+        //     }
+        // })
+        // .catch(error=>{
+        //     console.log(error);
+        // })
     },
     methods:{
         getImgSrc(url){
@@ -175,20 +188,37 @@ export default {
                 console.log(error);                
             })
         },
-        collect(){
+        collect(){            
+            // this.$axios
+            // .post("/collect",{
+            //     username:this.$store.state.username,
+            //     pictureId:this.picture.id,                
+            // })
+            // .then(resp=>{
+            //     if(resp.status===200){
+            //         this.notify("success","Already added to your favorite!");
+            //     }
+            // })
+            // .catch(error=>{
+            //     console.log(error);
+            // })
+            this.isCollected = true;
+        },
+        cancelCollect(){
             this.$axios
-            .post("/collect",{
+            .post("/cancelCollect",{
                 username:this.$store.state.username,
                 pictureId:this.picture.id,                
             })
             .then(resp=>{
                 if(resp.status===200){
-                    this.notify("success","Already added to your favorite!");
+                    this.notify("success","Already removed from your favorite!");
                 }
             })
             .catch(error=>{
                 console.log(error);
-            })
+            })            
+            this.isCollected = false;
         }
     }
     
@@ -261,10 +291,17 @@ i{
 }
 
 .collectionIcon{
-    text-align:center
+    text-align:right
 }
 .collectionIcon span i{
     cursor: pointer;
+}
+
+.el-icon-star-off{
+    font-size: 30px;
+}
+.el-icon-star-on{
+    font-size: 32px;    
 }
 
 /* picture comments */
