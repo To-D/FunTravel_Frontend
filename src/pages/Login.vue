@@ -158,7 +158,6 @@ export default {
         })
         .catch(error => {
           console.log(error);
-          this.notify('error','Username/Email or password is wrong!');
           this.loading = false;
         });
       }

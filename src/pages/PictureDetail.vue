@@ -8,17 +8,26 @@
         <el-col :span="20" :offset="2">        
             <!-- picture information -->
             <el-col :span="14">              
-                <div class="img_container">
+                <div class="img-container">
                     <vue-photo-zoom-pro :url=getImgSrc(picture.url)></vue-photo-zoom-pro>
-                    <!-- <img :src=getImgSrc(picture.url) />                     -->
                 </div>
                 <div class="text_container">
+                    <el-row>
+                    <el-col :span="16">
                     <h4>{{picture.title}}</h4> 
                     <ul class="post-info">
                         <li>{{picture.author}}</li>
                         <li>May 31, 2020</li>
-                        <li>{{picture.collectionCount}} Likes</li>
+                        <li>{{picture.collectionCount}} Likes</li>                        
                     </ul>
+                    </el-col>
+                    <el-col :span="8" class="collectionIcon">
+                        <br>
+                        <span @click="collect" v-if="!isCollected"><i class="el-icon-star-off" style="font-size:30px"></i></span>
+                        <span @click="cancelCollect" v-else><i class="el-icon-star-on" style="font-size:30px"></i></span>
+                    </el-col>
+                    </el-row>
+                    
                     <p>{{picture.intro}}</p>
                     <div class="post-options">
                         <el-row>
@@ -70,7 +79,6 @@
                             :total="comments.length">
                         </el-pagination>
                     </div>
-
                     <!-- comment form -->
                     <div>
                       <form id="comment" action="#" method="post">                          
@@ -82,12 +90,15 @@
                             :disabled="disable"
                         >
                         </el-input>           
-                        <el-button type="warning" native-type="submit" :disabled="disable">Submit</el-button>
+                        <el-button 
+                            type="warning" 
+                            :disabled="buttonDisable"
+                            @click="postComment"
+                            >Submit</el-button>
                       </form>
                     </div>
                   </div>
             </el-col>
-
         </el-col>
     </el-row>
 
@@ -109,8 +120,8 @@ export default {
             comment:"",
             pageSize:3,
             currentPage:1,
-            disable:false,
-            
+            disable:false,     
+            isCollected:false,       
         }
     },
     computed:{
@@ -118,29 +129,66 @@ export default {
             if(this.$store.state.token){
                 return "TYPE YOUR COMMENT"
             }
-            this.disable=true;
             return "LOGIN FIRST"
+        },
+        buttonDisable(){
+            return this.comment == "";
         }
     },
     created(){
-        this.$axios.post("/getPictureDetail",{
-            id:this.$route.params.pictureID
-        })
-        .then(resp=>{
-            if(resp.status===200){
-                this.picture=resp.data;
-            }
-        })
-        .catch(error=>{
-            console.log(error);
-        })
+        this.getPictureDetail();
     },
     methods:{
         getImgSrc(url){
             return this.GLOBAL.baseUrl + "/images/" + url;
         },
-        load(){
-            this.count+=3;
+        postComment(){
+            this.$axios
+            .post('/postComment',{
+                comment:this.comment,
+                username:this.$store.state.username,
+                pictureId:this.picture.id
+            })            
+            .then(resp=>{
+                if(resp.status === 200){
+                    this.notify("success","Comment successfully!")
+                }
+                this.comment="";
+                this.getPictureDetail();
+            })
+            .catch(error=>{
+                console.log(error);
+            })
+        },
+        getPictureDetail(){
+            this.$axios.post("/getPictureDetail",{
+                id:this.$route.params.pictureID
+            })
+            .then(resp=>{
+                console.log(resp);
+                if(resp.status===200){
+                    this.picture=resp.data.picture;
+                    this.comments = resp.data.comments;
+                }
+            })
+            .catch(error=>{
+                console.log(error);                
+            })
+        },
+        collect(){
+            this.$axios
+            .post("/collect",{
+                username:this.$store.state.username,
+                pictureId:this.picture.id,                
+            })
+            .then(resp=>{
+                if(resp.status===200){
+                    this.notify("success","Already added to your favorite!");
+                }
+            })
+            .catch(error=>{
+                console.log(error);
+            })
         }
     }
     
@@ -152,7 +200,7 @@ export default {
 }
 
 /* picture information */
-.img_container .photo-zoom-pro img{
+.img-container .photo-zoom-pro img{
     width:100%;
     height:100%;
     object-fit: cover;
@@ -210,6 +258,13 @@ export default {
 }
 i{
     color: #f48840;
+}
+
+.collectionIcon{
+    text-align:center
+}
+.collectionIcon span i{
+    cursor: pointer;
 }
 
 /* picture comments */

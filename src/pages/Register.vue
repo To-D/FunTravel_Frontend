@@ -224,7 +224,6 @@ export default {
         })
         .catch(error => {
           console.log(error);
-          this.notify('error','Something error, try again later!');
           this.loading = false;
         });
       }
