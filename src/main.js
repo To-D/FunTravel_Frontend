@@ -67,6 +67,10 @@ Vue.prototype.GLOBAL = global
 
 Vue.config.productionTip = false
 
+
+import VuePhotoZoomPro from "vue-photo-zoom-pro";
+Vue.use(VuePhotoZoomPro);
+
 /* eslint-disable no-new */
 new Vue({
     el: '#app',

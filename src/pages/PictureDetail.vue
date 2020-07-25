@@ -2,15 +2,15 @@
 <div>
     <!-- navbar -->
     <navbar></navbar>
-
+    
     <!-- picture showcase -->
     <el-row class="detail_container" v-if="this.picture">
-        <el-col :span="20" :offset="2">
-
+        <el-col :span="20" :offset="2">        
             <!-- picture information -->
-            <el-col :span="14">
+            <el-col :span="14">              
                 <div class="img_container">
-                    <img :src=getImgSrc(picture.url) />
+                    <vue-photo-zoom-pro :url=getImgSrc(picture.url)></vue-photo-zoom-pro>
+                    <!-- <img :src=getImgSrc(picture.url) />                     -->
                 </div>
                 <div class="text_container">
                     <h4>{{picture.title}}</h4> 
@@ -39,7 +39,7 @@
                         </el-row>
                     </div>
                 </div>
-            </el-col>
+            </el-col>            
 
             <!-- picture comments -->
             <el-col :span="10">                
@@ -90,7 +90,7 @@
 
         </el-col>
     </el-row>
-    
+
 
     <foot></foot>
 </div>
@@ -105,7 +105,6 @@ export default {
     data(){
         return{
             picture:null,
-
             comments:[{id:1,username:"li",comment:"hhhh"},{id:2,username:"li",comment:"hhhh"},{id:3,username:"li",comment:"hhhh"},{id:4,username:"li",comment:"hhhh"}],
             comment:"",
             pageSize:3,
@@ -153,7 +152,7 @@ export default {
 }
 
 /* picture information */
-.img_container img{
+.img_container .photo-zoom-pro img{
     width:100%;
     height:100%;
     object-fit: cover;
