@@ -15,7 +15,7 @@
   :autoplaySpeed="1000"
   v-if="hottestPictures.length > 0"
   >
-    <div v-for="img in hottestPictures" :key="img.id" >
+    <div v-for="(img,index) in hottestPictures" :key="img.id" >
       <div class="hot_img_container">
           <img :src="getImgSrc(img.url)" :alt="img.title">
           <div class="item-content">
@@ -23,9 +23,17 @@
                 <router-link :to="'picture-detail/'+img.id" ><h4>{{img.title}}</h4></router-link>
                 <ul class="post-info">
                   <li>{{img.author}}</li>
-                  <li>May 14, 2020</li>
+                  <li>{{img.uploadTime.substr(0,10)}}</li>
                   <li>{{img.collectionCount}} Likes</li>
                 </ul>
+                <div class="topic-container">
+                  <span><i class="el-icon-price-tag"></i></span>
+                    <ul>                                                                        
+                      <li v-for="topic in hottestPicTopics[index]" :key="topic.id">
+                        {{topic.topic}}
+                      </li>                                                                     
+                    </ul>
+                </div>
               </div>
           </div>
       </div>
@@ -46,20 +54,27 @@
     <!-- Newest pictures -->
     <el-col :span="18" :offset="3">
       <el-col :span="16">        
-        <div class="container" v-for="i in 3" :key='i' >
+        <div class="container" v-for="(picture,index) in newestPictures" :key='picture.id' >
             <div class="img_container">
-                <img src="../assets/images/picture2.jpg" />
+                <img :src=getImgSrc(picture.url) />
             </div>
             <div class="text_container">
-              <span>THEME</span>
-                <h4>Title</h4> 
-                <ul class="post-info">
-                  <li>AUTHOR</li>
-                  <li>May 31, 2020(release time)</li>
-                  <li>12 Comments(comments_count)</li>
-                </ul>                
+              <span>{{picture.title}}</span>              
+              <ul class="post-info">
+                <li>{{picture.author}}</li>
+                <li>{{picture.uploadTime.substr(0,10)}}</li>
+                <li>{{picture.collectionCount}} likes</li>
+              </ul>                
+              <div class="topic-container">
+                  <span><i class="el-icon-price-tag"></i></span>
+                    <ul>                                                                        
+                      <li v-for="topic in newestPicTopics[index]" :key="topic.id">
+                        {{topic.topic}}
+                      </li>                                                                     
+                    </ul>
                 </div>
-            </div>                                
+            </div>
+        </div>                                
       </el-col>   
 
     <!-- side bar -->
@@ -114,7 +129,9 @@ export default {
   data () {
     return {
       hottestPictures:[],
-      newestPictures:[]
+      hottestPicTopics:[],
+      newestPictures:[],
+      newestPicTopics:[],
     }
   },
   methods:{
@@ -127,8 +144,10 @@ export default {
     this.$axios
     .post("/getHottestPictures")
     .then(resp=>{
+      console.log(resp);
       if(resp.status === 200){
-        this.hottestPictures = resp.data;
+        this.hottestPictures = resp.data.pictures;
+        this.hottestPicTopics = resp.data.topics
       }
     })
     .catch(error=>{
@@ -139,7 +158,8 @@ export default {
     .post("/getNewestPictures")
     .then(resp=>{
       if(resp.status === 200){
-        this.newestPictures = resp.data;
+        this.newestPictures = resp.data.pictures;
+        this.newestPicTopics = resp.data.topics;
       }
     })
     .catch(error=>{
@@ -212,14 +232,9 @@ export default {
     text-align: left;
 }
 
-/* .owl-theme .owl-item .item-content .meta-category span {
-    color: #f48840;
-    font-size: 18px;
-    text-transform: uppercase;
-    font-weight: 900;
-    letter-spacing: 0.25px;
-    text-align: left;
-} */
+.topic-container{
+  margin-top:10px;
+}
 .owl-theme .owl-item .item-content h4 {
     text-align: left;
     color: #f48840;
@@ -245,12 +260,12 @@ ul {
     font-weight: 600;
     transition: all .3s;
 }
-.owl-theme .owl-item .item-content ul li:after {
+.owl-theme .owl-item .item-content .post-info ul li:after {
     content: '|';
     color: #fff;
     margin-left: 8px;
 }
-.owl-theme .owl-item .item-content ul li:last-child:after{
+.owl-theme .owl-item .item-content .post-info ul li:last-child:after{
   display: none;
 }
 
@@ -393,5 +408,16 @@ i{
 }
 .sidebar .tags ul li a:hover{
   color:#fff
+}
+
+.topic-container ul li::after{
+  content:" ,";
+}
+
+.topic-container ul{
+  display: inline;
+}
+.topic-container ul li:last-child:after{
+  display: none;
 }
 </style>

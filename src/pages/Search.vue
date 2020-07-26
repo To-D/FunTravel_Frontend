@@ -95,10 +95,7 @@ export default {
     border-bottom: 1px solid #eee;
     background-image: url("../../static/images/heading-bg.jpg");
 }
-.search-input{
-    
-    /* background-image: url("../../static/images/heading-bg.jpg"); */
-}
+
 .el-input{
     margin-top:15px;    
 }

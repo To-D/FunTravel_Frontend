@@ -5,6 +5,7 @@ import Login from '@/pages/Login'
 import Register from '@/pages/Register'
 import PictureDetail from '@/pages/PictureDetail'
 import Search from "@/pages/Search"
+import MyFavorite from "@/pages/MyFavorite"
 import test from "@/components/ShowPicture"
 
 
@@ -32,6 +33,10 @@ export default new Router({
         path: "/search",
         name: "Search",
         component: Search
+    }, {
+        path: "/my-favorite",
+        name: "MyFavorite",
+        component: MyFavorite
     }, {
         path: "/test",
         name: "test",
