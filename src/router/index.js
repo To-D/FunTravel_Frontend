@@ -4,6 +4,8 @@ import Home from '@/pages/Home'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
 import PictureDetail from '@/pages/PictureDetail'
+import Search from "@/pages/Search"
+import test from "@/components/ShowPicture"
 
 
 Vue.use(Router)
@@ -26,5 +28,13 @@ export default new Router({
         path: "/picture-detail/:pictureID",
         name: "PictureDetail",
         component: PictureDetail
+    }, {
+        path: "/search",
+        name: "Search",
+        component: Search
+    }, {
+        path: "/test",
+        name: "test",
+        component: test
     }]
 })

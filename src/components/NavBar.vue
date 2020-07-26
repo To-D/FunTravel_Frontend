@@ -10,7 +10,7 @@
         mode="horizontal" 
         id="menu" 
         active-text-color=" #f48840"
-        text-color="#1e1e1e"
+        text-color="#1e1e1e"         
         >
             <el-menu-item index="1" >
                 <router-link to="/">HOME</router-link>
@@ -52,6 +52,7 @@ import logo from "../components/Logo"
 export default {
     name:"NavBar",
     components:{logo},
+    props:['page'],
     data() {
       return {
         activeIndex: '1',
@@ -63,6 +64,14 @@ export default {
         if(this.$store.state.token){
             this.isLogin = true;
             this.username = this.$store.state.username;
+        }        
+        switch(this.page){
+            case "Home":
+                this.activeIndex = '1';
+                break;
+            case "Search":
+                this.activeIndex = '2';
+                break;
         }
     },
     methods:{
@@ -76,7 +85,7 @@ export default {
                 this.$router.push("/login");
                 this.notify("success","You have signed out!")
             })
-        }
+        },        
     }
   }
 </script>

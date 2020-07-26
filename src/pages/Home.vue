@@ -1,6 +1,6 @@
 <template>
 <div>
-  <navbar></navbar>
+  <navbar page="Home"></navbar>
 
   <!-- banner -->
   <div id="carousal_container">

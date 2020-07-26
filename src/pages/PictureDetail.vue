@@ -32,16 +32,17 @@
                     <div class="post-options">
                         <el-row>
                             <el-col :span="12">
-                                <ul class="post-tags">
-                                    <li><i class="el-icon-discount"></i></li>
-                                    <li><a href="#">Beauty</a>,</li>
-                                    <li><a href="#">Nature</a></li>
+                                <span><i class="el-icon-discount"></i></span>
+                                <ul class="post-tags">                                                                        
+                                    <li v-for="topic in topics" :key="topic.id">
+                                        {{topic.topic}}
+                                    </li>                                                                     
                                 </ul>
                             </el-col>
                             <div class="col-6">
-                                <ul class="post-share">
-                                    <li><i class="el-icon-position"></i></li>
-                                    <li>{{picture.nation}},</li>
+                                <span><i class="el-icon-position"></i></span>
+                                <ul class="post-share">                                    
+                                    <li>{{picture.nation}}</li>
                                     <li>{{picture.city}}</li>
                                 </ul>
                             </div>
@@ -60,7 +61,7 @@
                             v-for="comment in comments.slice((currentPage- 1)*pageSize,currentPage*pageSize)" 
                             :key="comment.id"
                             >
-                                    <h4>{{comment.username}}<span>May 16, 2020</span></h4>
+                                    <h4>{{comment.username}}<span>{{comment.time.substr(0,10)}}</span></h4>
                                     <p>{{comment.comment}}</p>
                             </div>
 
@@ -116,12 +117,13 @@ export default {
     data(){
         return{
             picture:null,
-            comments:[{id:1,username:"li",comment:"hhhh"},{id:2,username:"li",comment:"hhhh"},{id:3,username:"li",comment:"hhhh"},{id:4,username:"li",comment:"hhhh"}],
+            comments:[],
             comment:"",
             pageSize:3,
             currentPage:1,
             disable:false,     
-            isCollected:false,       
+            isCollected:false, 
+            topics:[],
         }
     },
     computed:{
@@ -136,20 +138,7 @@ export default {
         }
     },
     created(){
-        this.getPictureDetail();
-        // this.$axios
-        // .post("/isCollected",{
-        //     username:this.$store.state.username,
-        //     pictureId:this.picture.id
-        // })
-        // .then(resp=>{
-        //     if(resp.status === 200){                
-        //         this.isCollected = resp.data;
-        //     }
-        // })
-        // .catch(error=>{
-        //     console.log(error);
-        // })
+        this.getPictureDetail();        
     },
     methods:{
         getImgSrc(url){
@@ -164,7 +153,7 @@ export default {
             })            
             .then(resp=>{
                 if(resp.status === 200){
-                    this.notify("success","Comment successfully!")
+                    this.notify("success","Comment successfully!")                    
                 }
                 this.comment="";
                 this.getPictureDetail();
@@ -179,9 +168,24 @@ export default {
             })
             .then(resp=>{
                 console.log(resp);
-                if(resp.status===200){
-                    this.picture=resp.data.picture;
-                    this.comments = resp.data.comments;
+                if(resp.status === 200){
+                    this.picture = resp.data.picture;                    
+                    this.comments = this.picture.comments;                    
+                    this.topics = resp.data.topics;
+                    this.$axios
+                    .post("/isCollected",{
+                        username:this.$store.state.username,
+                        pictureId:this.picture.id
+                    })
+                    .then(resp=>{
+                        console.log(resp);
+                        if(resp.status === 200){                
+                            this.isCollected = resp.data;
+                        }
+                    })
+                    .catch(error=>{
+                        console.log(error);
+                    })
                 }
             })
             .catch(error=>{
@@ -189,20 +193,21 @@ export default {
             })
         },
         collect(){            
-            // this.$axios
-            // .post("/collect",{
-            //     username:this.$store.state.username,
-            //     pictureId:this.picture.id,                
-            // })
-            // .then(resp=>{
-            //     if(resp.status===200){
-            //         this.notify("success","Already added to your favorite!");
-            //     }
-            // })
-            // .catch(error=>{
-            //     console.log(error);
-            // })
-            this.isCollected = true;
+            this.$axios
+            .post("/collect",{
+                username:this.$store.state.username,
+                pictureId:this.picture.id,                
+            })
+            .then(resp=>{
+                if(resp.status===200){
+                    this.isCollected = true;
+                    this.picture.collectionCount++;
+                    this.notify("success","Already added to your favorite!");
+                }
+            })
+            .catch(error=>{
+                console.log(error);
+            })            
         },
         cancelCollect(){
             this.$axios
@@ -212,13 +217,14 @@ export default {
             })
             .then(resp=>{
                 if(resp.status===200){
+                    this.isCollected = false;
+                    this.picture.collectionCount--;
                     this.notify("success","Already removed from your favorite!");
                 }
             })
             .catch(error=>{
                 console.log(error);
-            })            
-            this.isCollected = false;
+            })                        
         }
     }
     
@@ -283,9 +289,14 @@ export default {
     color: #7a7a7a;
     line-height: 30px;
 }
-.post-options ul li a{
+.post-options ul {
+    display: inline;    
     color: #aaa;
 }
+.post-options ul li::after{
+    content:" ,";
+}
+
 i{
     color: #f48840;
 }
@@ -358,9 +369,6 @@ i{
 .el-pagination i{
     color:#7a7a7a
 }
-.el-button{
-    margin-top:10px;
-    border-radius: 0;
-    width:450px;    
-}
+
+
 </style>
