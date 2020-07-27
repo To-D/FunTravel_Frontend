@@ -56,7 +56,7 @@
       <el-col :span="16">        
         <div class="container" v-for="(picture,index) in newestPictures" :key='picture.id' >
             <div class="img_container">
-                <img :src=getImgSrc(picture.url) />
+                <img :src=getImgSrc(picture.url) @click="toDetail(picture.id)" />
             </div>
             <div class="text_container">
               <span>{{picture.title}}</span>              
@@ -137,6 +137,9 @@ export default {
   methods:{
     getImgSrc(url){
       return this.GLOBAL.baseUrl +"/images/"+ url;
+    },
+    toDetail(id){
+      this.$router.push("/picture-detail/"+id)
     }
   },
   
@@ -355,7 +358,9 @@ ul {
 i{
     color: #f48840;
 }
-
+.img_container{
+  cursor: pointer;
+}
 /* side bar */
 .sidebar{
   margin-left: 20px;

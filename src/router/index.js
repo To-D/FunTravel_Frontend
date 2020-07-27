@@ -6,6 +6,8 @@ import Register from '@/pages/Register'
 import PictureDetail from '@/pages/PictureDetail'
 import Search from "@/pages/Search"
 import MyFavorite from "@/pages/MyFavorite"
+import Upload from "@/pages/Upload"
+import Modify from "@/pages/Modify"
 import test from "@/components/ShowPicture"
 
 
@@ -37,6 +39,14 @@ export default new Router({
         path: "/my-favorite",
         name: "MyFavorite",
         component: MyFavorite
+    }, {
+        path: '/upload',
+        name: "Upload",
+        component: Upload
+    }, {
+        path: '/modify/:pictureId',
+        name: "Modify",
+        component: Modify
     }, {
         path: "/test",
         name: "test",

@@ -149,8 +149,8 @@ export default {
             //Save token
              this.$store.commit("login", resp.data);
              this.notify('success','Welcome back!');
-            //  this.$router.go(-1);
-            this.$router.push("/");
+             this.$router.go(-1);
+            // this.$router.push("/");
           } else {
             this.notify('error','Username/Email or password is wrong!');
             this.loading = false;

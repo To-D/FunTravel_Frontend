@@ -8,7 +8,7 @@
         </div>
     </div>
     <div v-else>
-        <div class="outer-container">            
+        <div class="outer-container" v-if="this.pictures">            
             <el-col :span="8" v-for="picture in pictures.slice((currentPage- 1)*pageSize,currentPage*pageSize)" :key='picture.id' >
                 <div class="container" >
                 <div class="img_container">

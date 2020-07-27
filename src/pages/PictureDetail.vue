@@ -21,7 +21,7 @@
                         <li>{{picture.collectionCount}} Likes</li>                        
                     </ul>
                     </el-col>
-                    <el-col :span="8" class="collectionIcon">
+                    <el-col :span="8" class="collectionIcon" v-if="isLogin">
                         <br>
                         <span @click="collect" v-if="!isCollected"><i class="el-icon-star-off" ></i></span>
                         <span @click="cancelCollect" v-else><i class="el-icon-star-on" ></i></span>
@@ -55,11 +55,11 @@
             <el-col :span="10">                
                 <div class="sidebar-comment">                    
                     <h2>Comments</h2>
-                    <div v-if="this.comments">
+                    <div v-if="comments">
                         <div class="comment-container" >
                             <div class="comment-content" 
                             v-for="comment in comments.slice((currentPage- 1)*pageSize,currentPage*pageSize)" 
-                            :key="comment.id"
+                            :key="comment.id"                            
                             >
                                     <h4>{{comment.username}}<span>{{comment.time.substr(0,10)}}</span></h4>
                                     <p>{{comment.comment}}</p>
@@ -124,6 +124,7 @@ export default {
             disable:false,     
             isCollected:false, 
             topics:[],
+            isLogin:false,
         }
     },
     computed:{
@@ -138,7 +139,10 @@ export default {
         }
     },
     created(){
-        this.getPictureDetail();        
+        this.getPictureDetail();   
+        if(this.$store.state.token){
+            this.isLogin = true;
+        }
     },
     methods:{
         getImgSrc(url){
@@ -169,8 +173,8 @@ export default {
             .then(resp=>{
                 console.log(resp);
                 if(resp.status === 200){
-                    this.picture = resp.data.picture;                    
-                    this.comments = this.picture.comments;                    
+                    this.picture = resp.data.picture;                         
+                    this.comments = resp.data.picture.comments;                                        
                     this.topics = resp.data.topics;
                     this.$axios
                     .post("/isCollected",{
@@ -234,6 +238,7 @@ export default {
 .detail_container{
     margin-top:150px;
 }
+
 
 /* picture information */
 .img-container .photo-zoom-pro img{
