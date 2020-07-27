@@ -44,7 +44,7 @@ export default new Router({
         name: "Upload",
         component: Upload
     }, {
-        path: '/modify/:pictureId',
+        path: '/modify/:pictureID',
         name: "Modify",
         component: Modify
     }, {

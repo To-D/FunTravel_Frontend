@@ -12,12 +12,13 @@ import foot from "../components/Footer"
 import uploadForm from "../components/UploadForm"
 
 export default {
-    name:"Upload",
-    props:['pictureForm'],
-    components:{navbar,foot,uploadForm}
-    
+    name:"Upload",    
+    components:{navbar,foot,uploadForm},
+    created(){
+        if(!this.$store.state.token){
+            this.$router.push("/login");
+            this.notify("warning","Log in first!")
+        }
+    }
 }
 </script>
-<style scoped>
-
-</style>

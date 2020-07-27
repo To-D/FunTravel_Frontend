@@ -121,22 +121,41 @@
             </el-form-item>
 
             <el-form-item>
-                <el-button type="warning" @click="Submit('form')">Submit</el-button>
+                <el-button type="warning" @click="dialogVisible = true">Submit</el-button>
             </el-form-item>
         </el-col>  
         </el-form>
     </el-row>        
+
+    <el-dialog
+        title="Confirm"
+        :visible.sync="dialogVisible"
+        width="30%"
+        :before-close="handleClose">
+        <span>Are you sure about your picture information?</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">No</el-button>
+            <el-button type="warning" @click="Submit('form')">Yes</el-button>
+        </span>
+    </el-dialog>
 </div>
 </template>
 
 <script>
 export default {
     name:"uploadForm",
-    props:['picture'],
+    props:{
+        picture:Object,
+        edit:{
+            type:Boolean,
+            default:false,
+        },
+        topics:Array,
+    },        
     inject: ["reload"],
     data(){
         return{
-            isEdit:false,
+            // isEdit:false,
 
             loading:false,
             imageUrl: '',
@@ -162,7 +181,8 @@ export default {
                 label: 'Canada'
                 },
             ],
-            cities:[],            
+            cities:[],         
+            dialogVisible:false,
  
             form:{
                 title:"",
@@ -206,6 +226,16 @@ export default {
                 }                
               ],              
             }
+        }
+    },
+    created(){        
+        if(this.edit){
+            this.form = this.picture;        
+            this.form.topics = this.topics;
+            console.log(this.form.topics);
+            var name = this.picture.title +".jpg";
+            this.files=[{name:name}],
+            this.imageUrl = this.GLOBAL.baseUrl+"/images/"+this.picture.url;                       
         }
     },
     methods:{
@@ -304,21 +334,27 @@ export default {
                 default:
                     this.cities=[];
             }
-        },              
-      Submit(formName) {
-          let _this = this;
-        this.$refs[formName].validate(valid => {
-          if (valid) {
-            if(this.form.nation == "" || this.form.city == ""){
-                this.notify("warning","Please choose nation and city!")
-                return;                
-            }
-            // upload but no picture
-            if(!this.isEdit && !this.file){
-                this.notify("warning","Please upload your picture!")
-                return;
-            }                                   
-
+        },        
+        confirmForm(){            
+            let _this = this;
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    if(this.form.nation == "" || this.form.city == ""){
+                        this.notify("warning","Please choose nation and city!")
+                        return;                
+                    }
+                    // upload but no picture
+                    if(!this.edit && !this.file){
+                        this.notify("warning","Please upload your picture!")
+                        return;
+                    }       
+                    this.dialogVisible = true;
+                }else {
+                this.$message.error("Wrong submit! Please check the form.");                
+                }
+            });
+        },
+      Submit(formName) {        
             this.loading = true;            
             
             var data = new FormData(); 
@@ -328,11 +364,19 @@ export default {
             data.append("topics", picture.topics);
             data.append("intro", picture.intro);                        
             data.append("nation", picture.nation);                        
-            data.append("city", picture.city);                        
-            data.append("file", this.file.raw);                
-            data.append("username",this.$store.state.username);
+            data.append("city", picture.city);                             
+                      
+            if(!this.edit){ // upload                
+                data.append("username",this.$store.state.username);  
+            }else{  //edit
+                 data.append("pictureId",this.$route.params.pictureID);
+            }            
+            
+            if(this.file != null){
+                data.append("file", this.file.raw);               
+            }
 
-            console.log(this.file);
+            // return;
             // if( this.isEdit && this.file !== null){// File was changed
             //     data.append("reviseFile","reviseFile");
             // }else{// Not edit or file not change
@@ -343,7 +387,7 @@ export default {
               headers: { "Content-Type": "multipart/form-data" }
             };
 
-            var url = this.isEdit?'/edit':'/upload';
+            var url = '/upload';
 
             this.$axios
             .post(url, data, config)
@@ -351,19 +395,13 @@ export default {
               if (resp.status === 200) {                
                 this.loading = false;                
                 this.notify("success","Upload Successfully");                
-                _this.reload();
+                this.reload();
               }
             })
             .catch(error => {
               console.log(error);
               this.loading = false;
-            });
-
-          } else {
-            this.$message.error("Wrong submit! Please check the form.");
-            this.loading = false;
-          }
-        });
+            });          
       },          
     }
     

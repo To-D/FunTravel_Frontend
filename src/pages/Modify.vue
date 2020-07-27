@@ -1,7 +1,7 @@
 <template>
 <div>
     <navbar></navbar>
-    <upload-form></upload-form>
+    <upload-form v-if="this.picture && this.topics && this.topics.length > 0" :edit="true" :picture="this.picture" :topics="this.topics"></upload-form>
     <foot></foot>
 </div>
 </template>
@@ -12,12 +12,51 @@ import foot from "../components/Footer"
 import uploadForm from "../components/UploadForm"
 
 export default {
-    name:"Upload",
-    props:['pictureForm'],
-    components:{navbar,foot,uploadForm}
+    name:"Upload",    
+    components:{navbar,foot,uploadForm},
+    data(){
+        return{
+            picture:{},
+            topics:[],
+        }        
+    },
+    created(){
+        if(!this.$store.state.token){
+            this.$router.push("/login");
+            this.notify("warning","Log in first!")
+        }
+
+        this.$axios
+        .post('/canModify',{
+            username:this.$store.state.username,
+            pictureId:this.$route.params.pictureID
+        })
+        .then(resp=>{            
+            console.log(resp);
+            if(resp.status === 200){
+                if(resp.data.message == "no"){
+                    this.$router.push("/");
+                    this.notify("waning","Sorry, you are not the uploader!")
+                    return;
+                }
+
+                this.picture = resp.data.picture;                
+                                
+                var tmp = JSON.parse(JSON.stringify(resp.data.topics));             
+                var res = [];
+                var len = tmp.length;
+                for(var i = 0; i< len; i++){                    
+                    res.push(tmp[i].topic);
+                }                            
+                this.topics = res;
+                
+            }
+        })
+        .catch(error=>{
+            console.log(error);
+        })
+        
+    }
     
 }
 </script>
-<style scoped>
-
-</style>
