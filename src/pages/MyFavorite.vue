@@ -3,20 +3,35 @@
     <navbar page="MyFavorite"></navbar>
     <div class="out-container">        
         <el-row>
-        <el-col :span=14 :offset="5">
+        <el-col :span=6 :offset="9">
             <h2>My Favorite</h2>
         </el-col>
-        <el-col :span=3>
-            <el-dropdown class="track">
+        <el-col :span="3" :offset="1" class="track">
+            <i class="el-icon-view" v-if="view" style="color:#f48840"> PUBLIC  </i> 
+            <i class="el-icon-view" v-else style="color:#C0CCDA"> PRIVATE</i> 
+            <el-switch
+                v-model="view"                
+                active-color="#f48840"
+                @change="changeView"
+                >
+            </el-switch>
+            
+        </el-col>
+        <el-col :span="3">
+            <el-dropdown class="track" @command="handleCommand">
                 <span class="el-dropdown-link">
-                    <i class="el-icon-timer">Footprint</i>
-                    
+                    <i class="el-icon-timer" style="color:#f48840"> FOOTPRINT</i>                    
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item  v-for="(history,index) in histories" :key="index">{{history.title}}</el-dropdown-item>                
+                    <el-dropdown-item 
+                     v-for="(history,index) in histories" 
+                     :key="index" 
+                     :command="history.id">
+                        {{history.title}}
+                     </el-dropdown-item>                
                 </el-dropdown-menu>
             </el-dropdown>
-        </el-col>
+        </el-col>        
         </el-row>
         
         </div>
@@ -40,10 +55,29 @@ export default {
             pictures:[],
             childStart:false,
             histories:[],
+            view:true,            
         }
     },
     methods:{
+        handleCommand(command) {
+            this.$router.push("/picture-detail/"+command);
+        },
+        changeView(){
+            this.$axios
+            .post("/setView",{
+                view:this.view?1:0,
+                username:this.$store.state.username
+            })
+            .then(resp=>{
+                if(resp.status===200){
+                    console.log(resp);
+                }
+            })
+            .catch(error=>{
+                console.log(error);
+            })
 
+        }
     },
     created(){
         if(!this.$store.state.token){
@@ -67,7 +101,7 @@ export default {
         .catch(error=>{
             console.log(error);
         })        
-    }
+    },
 }
 </script>
 
@@ -77,11 +111,11 @@ export default {
 }
 
 .track{
-    margin-top:25px
+    margin-top:40px
 }
 
 .track i{
-    font-size: 20px;
+    font-size: 18px;
     cursor: auto;
 }
 </style>

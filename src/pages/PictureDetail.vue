@@ -184,6 +184,7 @@ export default {
                     .then(resp=>{                           
                         if(resp.status === 200){                
                             this.isCollected = resp.data;                            
+                            // this.$store.state.histories = null;
                             // store browse history
                             var tmp = this.$store.state.histories;                            
                             if(tmp == null){
@@ -195,8 +196,9 @@ export default {
 
                                 // delete duplicate
                                 for(var i = 0; i<len; i++){
+                                    console.log(histories[i].title);
                                     if(histories[i].id == this.picture.id){
-                                        histories = histories.splice(i,1);
+                                        histories.splice(i,1);
                                     }
                                 }                                
 
