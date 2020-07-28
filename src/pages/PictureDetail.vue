@@ -142,7 +142,8 @@ export default {
         this.getPictureDetail();   
         if(this.$store.state.token){
             this.isLogin = true;
-        }
+        }        
+        
     },
     methods:{
         getImgSrc(url){
@@ -170,8 +171,7 @@ export default {
             this.$axios.post("/getPictureDetail",{
                 id:this.$route.params.pictureID
             })
-            .then(resp=>{
-                console.log(resp);
+            .then(resp=>{                
                 if(resp.status === 200){
                     this.picture = resp.data.picture;                         
                     this.comments = resp.data.picture.comments;                                        
@@ -181,10 +181,35 @@ export default {
                         username:this.$store.state.username,
                         pictureId:this.picture.id
                     })
-                    .then(resp=>{
-                        console.log(resp);
+                    .then(resp=>{                           
                         if(resp.status === 200){                
-                            this.isCollected = resp.data;
+                            this.isCollected = resp.data;                            
+                            // store browse history
+                            var tmp = this.$store.state.histories;                            
+                            if(tmp == null){
+                                var history = [{title:this.picture.title,id:this.picture.id}];          
+                                this.$store.commit("addHistory", JSON.stringify(history));
+                            }else{
+                                var histories = JSON.parse(tmp);
+                                var len = histories.length;
+
+                                // delete duplicate
+                                for(var i = 0; i<len; i++){
+                                    if(histories[i].id == this.picture.id){
+                                        histories = histories.splice(i,1);
+                                    }
+                                }                                
+
+                                var history = {title:this.picture.title,id:this.picture.id};                                
+                                histories.splice(0,0,history);
+                                
+                                len = histories.length;
+                                // delete exceed
+                                if(len>10){
+                                    histories = histories.slice(0,len-1);
+                                }                                
+                                this.$store.commit("addHistory", JSON.stringify(histories));
+                            }
                         }
                     })
                     .catch(error=>{

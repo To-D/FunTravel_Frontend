@@ -121,7 +121,8 @@
             </el-form-item>
 
             <el-form-item>
-                <el-button type="warning" @click="dialogVisible = true">Submit</el-button>
+                <el-button type="warning" @click="dialogVisible = true" v-if="edit">Confirm Modify</el-button>
+                <el-button type="warning" @click="dialogVisible = true" v-else>Submit</el-button>
             </el-form-item>
         </el-col>  
         </el-form>
@@ -131,8 +132,9 @@
         title="Confirm"
         :visible.sync="dialogVisible"
         width="30%"
-        :before-close="handleClose">
-        <span>Are you sure about your picture information?</span>
+    >
+        <span v-if="!edit">Are you sure about your picture information?</span>
+        <span v-else>Are you sure about your modification?</span>
         <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">No</el-button>
             <el-button type="warning" @click="Submit('form')">Yes</el-button>
@@ -374,14 +376,7 @@ export default {
             
             if(this.file != null){
                 data.append("file", this.file.raw);               
-            }
-
-            // return;
-            // if( this.isEdit && this.file !== null){// File was changed
-            //     data.append("reviseFile","reviseFile");
-            // }else{// Not edit or file not change
-            //     data.append("reviseFile","");
-            // }
+            }            
 
             var config = {
               headers: { "Content-Type": "multipart/form-data" }

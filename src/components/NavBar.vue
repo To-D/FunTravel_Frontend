@@ -28,21 +28,32 @@
                         {{username}}
                     </el-badge>
                 </template>                
-                <el-menu-item index="3-1"><router-link to="/MyFavorite"> Favorite</router-link></el-menu-item>
-                <el-menu-item index="3-2"><router-link to="/Upload">Upload</router-link></el-menu-item>
-                <el-menu-item index="3-3"><router-link to="/MyPicture">My pictures</router-link></el-menu-item>                
+                <el-menu-item index="3-1"><router-link to="/my-favorite"> Favorite</router-link></el-menu-item>
+                <el-menu-item index="3-2"><router-link to="/upload">Upload</router-link></el-menu-item>
+                <el-menu-item index="3-3"><router-link to="/my-pictures">My pictures</router-link></el-menu-item>                
                 <el-menu-item index="3-4">
                     <el-badge :is-dot="true" class="item">
                     <router-link to="/MyFriends">My Friends</router-link>
                     </el-badge>
                 </el-menu-item>                
-                <el-menu-item index="3-5" @click="logout">Logout</el-menu-item>
+                <el-menu-item index="3-5" @click="dialogVisible = true">Logout</el-menu-item>
             </el-submenu>
             
         </el-menu>
       </el-col>
     </el-row>
-    </div>
+    <el-dialog
+        title="Confirm"
+        :visible.sync="dialogVisible"
+        width="30%"
+        >
+        <span>Are you sure to logout?</span>        
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">No</el-button>
+            <el-button type="danger" @click="logout">Yes</el-button>
+        </span>
+    </el-dialog>
+</div>
 </template>
 
 <script>
@@ -56,14 +67,15 @@ export default {
       return {
         activeIndex: '1',
         isLogin: false,
-        username: "USERNAME"
+        username: "USERNAME",
+        dialogVisible:false,
       };
     },
     created(){
         if(this.$store.state.token){
             this.isLogin = true;
             this.username = this.$store.state.username;
-        }        
+        }                
         switch(this.page){
             case "Home":
                 this.activeIndex = '1';
@@ -71,19 +83,25 @@ export default {
             case "Search":
                 this.activeIndex = '2';
                 break;
+            case "Upload":
+                this.activeIndex='3-2';
+                break;
+            case "MyPictures":
+                this.activeIndex='3-3';
+                break;
+            case "MyFavorite":
+                this.activeIndex='3-1';
+                break;
+            case "MyFriends":
+                this.activeIndex='3-4';
+                break;
         }
     },
     methods:{
         logout(){
-            this.$confirm("Are you sure to sign out?", "Sign Out", {
-                confirmButtonText: "Yes",
-                cancelButtonText: "No"
-            })
-            .then(() => {
-                this.$store.commit("logout");
-                this.$router.push("/login");
-                this.notify("success","You have signed out!")
-            })
+            this.$store.commit("logout");
+            this.$router.push("/login");
+            this.notify("success","You have signed out!");
         },        
     }
   }

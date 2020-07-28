@@ -1,6 +1,6 @@
 <template>
 <div>
-    <navbar></navbar>
+    <navbar page="Modify"></navbar>
     <upload-form v-if="this.picture && this.topics && this.topics.length > 0" :edit="true" :picture="this.picture" :topics="this.topics"></upload-form>
     <foot></foot>
 </div>

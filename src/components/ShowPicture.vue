@@ -1,6 +1,6 @@
 <template>
-<div>
-    <div v-if="pictures && pictures.length == 0">
+<div v-if="pictures">
+    <div v-if=" pictures.length == 0">
         <div >
             <div class="error-container">
                 <h2><i class="el-icon-folder-delete"></i>  No Picture Here</h2>
@@ -8,14 +8,32 @@
         </div>
     </div>
     <div v-else>
-        <div class="outer-container" v-if="this.pictures">            
+        <div class="outer-container">            
             <el-col :span="8" v-for="picture in pictures.slice((currentPage- 1)*pageSize,currentPage*pageSize)" :key='picture.id' >
                 <div class="container" >
                 <div class="img_container">
                     <img :src="getImgSrc(picture.url)" @click="toDetail(picture.id)"/>
                 </div>
                 <div class="text_container">
-                    <span>{{picture.title}}</span>            
+
+                    <div v-if="page=='MyPictures'">
+                        <el-col :span="12">
+                            <span>{{picture.title}}</span>            
+                        </el-col>
+                        <el-col :span="12" style="text-align:right">
+                            <el-button icon="el-icon-edit"  circle type="warning" size="small" @click="toModify(picture.id)"></el-button>
+                            <el-button icon="el-icon-delete"  circle type="danger" size="small" @click="dialogVisible=true;deleteId=picture.id"></el-button>
+                        </el-col>
+                    </div>
+                    <div v-else-if="page=='MyFavorite'">
+                        <el-col :span="12">
+                            <span>{{picture.title}}</span>            
+                        </el-col>
+                        <el-col :span="12" style="text-align:right" class="icon">
+                            <span @click="cancelCollect(picture.id)" ><i class="el-icon-star-on" ></i></span>
+                        </el-col>
+                    </div>
+                    <span v-else>{{picture.title}}</span>            
                     <ul class="post-info">
                         <li>{{picture.author}}</li>
                         <li>{{picture.uploadTime.substr(0,10)}}</li>
@@ -33,16 +51,38 @@
             >
         </el-pagination>
     </div>
+
+    <el-dialog
+        title="Confirm"
+        :visible.sync="dialogVisible"
+        width="30%"
+    >        
+        <span >Are you sure to delete this picture and relate information?</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false;deleteId=-1;">Cancel</el-button>
+            <el-button type="danger" @click="deletePicture">Confirm</el-button>
+        </span>
+    </el-dialog>
+
 </div>
 </template>
 <script>
 export default {
     name:"ShowPictures",
-    props:['pictures'],
+    inject:["reload"],
+    props:{
+        pictures:Array,
+        page:{
+            type:String,
+            default:"",
+            deleteId:-1,
+        }
+    },
     data(){
         return{
             pageSize:6,
             currentPage:1,
+            dialogVisible:false            
         }
     },
     methods:{
@@ -51,6 +91,41 @@ export default {
         },
         toDetail(id){
             this.$router.push("/picture-detail/"+id)
+        },
+        toModify(id){
+            this.$router.push("/modify/"+id)
+        },
+        deletePicture(){
+            this.$axios
+            .post("/deletePicture",{
+                id:this.deleteId,
+            })
+            .then(resp=>{
+                console.log(resp);
+                if(resp.status === 200){
+                    this.notify("success","Delete successfully!");
+                    this.reload();
+                }                
+            })
+            .catch(error=>{
+                console.log(error);
+            })
+        },
+        cancelCollect(id){
+            this.$axios
+            .post("/cancelCollect",{
+                username:this.$store.state.username,
+                pictureId:id,                
+            })
+            .then(resp=>{
+                if(resp.status===200){                    
+                    this.notify("success","Already removed from your favorite!");
+                    this.reload();
+                }
+            })
+            .catch(error=>{
+                console.log(error);
+            })
         }
     }
 }
@@ -59,6 +134,16 @@ export default {
 .outer-container{
     height: 800px;    
 }
+.icon{
+    text-align:right
+}
+
+
+.el-icon-star-on{
+    font-size: 30px;
+    cursor: pointer;    
+}
+
 .container{        
     width:400px; 
     margin-left:45px;
@@ -140,5 +225,9 @@ img{
 
 .el-pager li:hover {
     color:#f48840;
+}
+
+.text_container .el-button i{
+    color:#eee !important;
 }
 </style>

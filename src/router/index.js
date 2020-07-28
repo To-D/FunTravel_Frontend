@@ -8,6 +8,7 @@ import Search from "@/pages/Search"
 import MyFavorite from "@/pages/MyFavorite"
 import Upload from "@/pages/Upload"
 import Modify from "@/pages/Modify"
+import MyPictures from "@/pages/MyPictures"
 import test from "@/components/ShowPicture"
 
 
@@ -47,6 +48,10 @@ export default new Router({
         path: '/modify/:pictureID',
         name: "Modify",
         component: Modify
+    }, {
+        path: '/my-pictures',
+        name: "MyPictures",
+        component: MyPictures
     }, {
         path: "/test",
         name: "test",

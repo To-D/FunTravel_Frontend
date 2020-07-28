@@ -6,6 +6,7 @@ export default new Vuex.Store({
     state: {
         token: localStorage.getItem('token') || null,
         username: localStorage.getItem('username') || null,
+        histories: localStorage.getItem('histories') || null,
     },
     mutations: {
         login(state, userInfo) {
@@ -20,6 +21,10 @@ export default new Vuex.Store({
 
             localStorage.removeItem('username')
             state.username = null
+        },
+        addHistory(state, histories) {
+            localStorage.setItem('histories', histories)
+            state.histories = histories;
         }
     },
     actions: {}
