@@ -121,7 +121,7 @@ export default {
             comment:"",
             pageSize:3,
             currentPage:1,
-            disable:false,     
+            disable:this.$store.state.username?false:true,     
             isCollected:false, 
             topics:[],
             isLogin:false,
@@ -195,8 +195,7 @@ export default {
                                 var len = histories.length;
 
                                 // delete duplicate
-                                for(var i = 0; i<len; i++){
-                                    console.log(histories[i].title);
+                                for(var i = 0; i<len; i++){                                    
                                     if(histories[i].id == this.picture.id){
                                         histories.splice(i,1);
                                     }

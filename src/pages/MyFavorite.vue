@@ -55,7 +55,7 @@ export default {
             pictures:[],
             childStart:false,
             histories:[],
-            view:true,            
+            view:null,
         }
     },
     methods:{
@@ -69,8 +69,7 @@ export default {
                 username:this.$store.state.username
             })
             .then(resp=>{
-                if(resp.status===200){
-                    console.log(resp);
+                if(resp.status===200){                    
                 }
             })
             .catch(error=>{
@@ -95,6 +94,18 @@ export default {
             if(resp.status === 200){
                 this.pictures = resp.data;
                 this.childStart = true;
+            }
+        })
+        .catch(error=>{
+            console.log(error);
+        })        
+        this.$axios
+        .post('/getView',{
+            username:this.$store.state.username,
+        })
+        .then(resp=>{            
+            if(resp.status === 200){
+                this.view = resp.data;                
             }
         })
         .catch(error=>{

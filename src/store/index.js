@@ -21,6 +21,9 @@ export default new Vuex.Store({
 
             localStorage.removeItem('username')
             state.username = null
+
+            localStorage.removeItem('histories')
+            state.histories = null
         },
         addHistory(state, histories) {
             localStorage.setItem('histories', histories)

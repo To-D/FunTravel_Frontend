@@ -100,23 +100,23 @@ export default {
                 this.activeIndex='3-4';
                 break;
         }
-
-        this.$axios
-        .post("/hasMessage",{
-            username:this.$store.state.username,
-        })
-        .then(resp=>{
-            if(resp.status === 200){
-                if(resp.data == "yes"){
-                    this.noMessage = false;
+        if(this.isLogin){
+            this.$axios
+            .post("/hasMessage",{
+                username:this.$store.state.username,
+            })
+            .then(resp=>{
+                if(resp.status === 200){
+                    if(resp.data == "yes"){
+                        this.noMessage = false;
+                    }
                 }
-            }
-        })
-        .catch(error=>{
-            console.log(error);
-            this.notify("error","Sorry for something wrong!");            
-        })
-
+            })
+            .catch(error=>{
+                console.log(error);
+                this.notify("error","Sorry for something wrong!");            
+            })
+        }        
     },
     methods:{
         logout(){

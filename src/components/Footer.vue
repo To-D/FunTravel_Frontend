@@ -11,7 +11,7 @@
                     <li><router-link to="/login">Log in</router-link></li>              
                 </ul>
             </el-col>
-            <el-col :span="12" >
+            <el-col :span="12" v-if="isLogin">
                 <ul class="map">
                   <li><router-link to="/upload">Upload</router-link></li>
                   <li><router-link to="/myPictures">My Pictures</router-link></li>
@@ -35,6 +35,11 @@
 <script>
 export default {
     name:"Footer",
+    data(){
+        return{
+            isLogin:this.$store.state.username,
+        }
+    }
 }
 </script>    
 <style>

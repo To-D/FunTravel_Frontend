@@ -1,5 +1,6 @@
 <template>
 <div>
+
   <navbar page="Home"></navbar>
 
   <!-- banner -->
@@ -41,7 +42,7 @@
   </carousel>
   </div>
 
-  <!-- middle -->
+  <!-- middle title-->
   <el-row>
     <el-col :span="18" :offset="3">
       <div class="middle">
@@ -52,7 +53,7 @@
 
   <el-row>
     <!-- Newest pictures -->
-    <el-col :span="18" :offset="3">
+    <el-col :span="20" :offset="3">
       <el-col :span="16">        
         <div class="container" v-for="(picture,index) in newestPictures" :key='picture.id' >
             <div class="img_container">
@@ -78,7 +79,7 @@
       </el-col>   
 
     <!-- side bar -->
-    <el-col :span="8">
+    <!-- <el-col :span="8">
       <div class="sidebar">
           <el-row>
             <el-col :span="24">
@@ -108,10 +109,11 @@
                 </el-col>
               </el-row>
             </div>      
-    </el-col>
+    </el-col> -->
 
-  </el-col>
+    </el-col>
   </el-row>
+
   <!-- footer -->
   <foot></foot>
 </div>
@@ -128,8 +130,11 @@ export default {
   components: { navbar,carousel,ShowPicture,foot},
   data () {
     return {
+      // Hottest
       hottestPictures:[],
       hottestPicTopics:[],
+
+      // Newest
       newestPictures:[],
       newestPicTopics:[],
     }
@@ -142,12 +147,10 @@ export default {
       this.$router.push("/picture-detail/"+id)
     }
   },
-  
   created(){
     this.$axios
     .post("/getHottestPictures")
-    .then(resp=>{
-      console.log(resp);
+    .then(resp=>{      
       if(resp.status === 200){
         this.hottestPictures = resp.data.pictures;
         this.hottestPicTopics = resp.data.topics

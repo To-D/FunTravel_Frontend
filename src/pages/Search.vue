@@ -71,8 +71,7 @@ export default {
                 filter:this.filter,
                 sort:this.sort,
             })
-            .then(resp=>{
-                console.log(resp);
+            .then(resp=>{                
                 if(resp.status===200){
                     this.searchResult = resp.data;
                 }

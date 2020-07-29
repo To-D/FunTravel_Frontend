@@ -259,8 +259,7 @@ export default {
         .post('/getMyFavorite',{
             username:this.$store.state.username,
         })
-        .then(resp=>{            
-            console.log(resp);
+        .then(resp=>{                        
             if(resp.status === 200){
                 this.userPictures = resp.data;                
                 this.presentPictures = this.userPictures;
