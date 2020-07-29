@@ -17,6 +17,7 @@ em{
     color: #f48840;
 }
 h2{
+    color:black;    
     text-align: center;
     height:50px;
     font-size: 24px;

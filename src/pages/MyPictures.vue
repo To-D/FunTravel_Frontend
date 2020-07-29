@@ -33,8 +33,7 @@ export default {
         .post('/getMyPictures',{
             username:this.$store.state.username,
         })
-        .then(resp=>{
-            console.log(resp);
+        .then(resp=>{            
             if(resp.status === 200){
                 this.pictures = resp.data;
                 this.childStart = true;

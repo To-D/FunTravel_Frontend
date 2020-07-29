@@ -102,8 +102,7 @@ export default {
             .post("/deletePicture",{
                 id:this.deleteId,
             })
-            .then(resp=>{
-                console.log(resp);
+            .then(resp=>{                
                 if(resp.status === 200){
                     this.notify("success","Delete successfully!");
                     this.reload();

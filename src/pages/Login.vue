@@ -95,14 +95,14 @@ export default {
         },
         rules: {
           user: [
-            {required:true,message:"Username or email is required",blur:"change"}
+            {required:true,message:"Username or email is required",blur:"change",trigger:"blur"}
           ],
           password: [
-            {required:true, message:"Password is required", blur:"change"},
-             {pattern:/^[\w~!@#$%^&*()_+`\-={}:";'<>?,.\/]{6,12}$/, message:"Invalid password",blur:"change"},
+            {required:true, message:"Password is required", blur:"change",trigger:"blur"},
+            {pattern:/^[\w~!@#$%^&*()_+`\-={}:";'<>?,.\/]{6,12}$/, message:"Invalid password",blur:"change",trigger:"blur"},
           ],
           code:[
-            {required:true, message:"Verification code is required", blur:"change"},
+            {required:true, message:"Verification code is required", blur:"change",trigger:"blur"},
             {
             validator:(rule,value,callback)=>{
               if(value.toUpperCase() != this.identifyCode.toUpperCase()) {
@@ -172,6 +172,7 @@ img{
   width:80%;
   height:750px;
   margin-top:5px;
+  margin-left:50px;
 }
 a{
   color:#f48840;

@@ -7,7 +7,7 @@
         <!-- 侧边栏 -->
          <el-aside>        
             <el-menu
-            default-active="1"
+            default-active="-1"
             class="friends-list"
             
             >     
@@ -24,7 +24,7 @@
                 </el-col>
             </el-row>
             <el-menu-item                                 
-                index="1"                
+                index="-1"                
                 @click="changeRole(user)"
             >
                 <i class="el-icon-user-solid"></i>
@@ -33,9 +33,9 @@
 
             <div v-if="friends">
                 <el-menu-item                 
-                    v-for="(friend,index) in friends"
-                    :key=index
-                    :index="index"
+                    v-for="friend in friends"
+                    :key="friend.id"
+                    :index="friend.username"
                      @click="changeRole(friend)"
                 >
                     <i class="el-icon-user-solid"></i>
@@ -60,7 +60,7 @@
              </el-card>
          </el-col>
 
-         <div v-if="canView ">
+         <div v-if="canView">
             <div v-if="presentPictures && presentPictures.length>0">
                 <el-col 
                     :span="8" 
@@ -213,9 +213,9 @@ export default {
             // favorite pictures
             userPictures:[],
             presentPictures:[],
-            pageSize:this.currentPage>1 ? 6:5,
+            pageSize:5,
             currentPage:1,         
-            canView:false,
+            canView:true,
             
 
             // add new friend dialog
@@ -418,6 +418,7 @@ export default {
                     if(resp.status === 200){
                         if(resp.data.view){
                             this.presentPictures = resp.data.pictures;
+                            this.canView = true;
                         }else{
                             this.canView = false;
                             this.presentPictures=[];

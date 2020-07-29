@@ -2,7 +2,7 @@
 <div>
   <el-row>
   <el-col :span="11">
-    <img src="../assets/images/welcome.jpg" alt="Image"/>
+    <img src="../assets/images/welcome.jpg" alt="welcome"/>
   </el-col>
 
   <el-col :span="13">
@@ -18,15 +18,17 @@
       v-loading="loading"
       ref="registerForm"
     >
-      <el-form-item prop="username" size="medium" >
+     
+      <el-form-item prop="username" size="medium" >        
         <el-input
           size="medium"
           type="text"
           v-model="registerForm.username"
           auto-complete="off"
-          placeholder="Username"
-        ></el-input>
+          placeholder="Username (4 to 15 characters)"
+        ></el-input>        
       </el-form-item>
+     
 
       <el-form-item prop="email" size="medium" >
         <el-input
@@ -44,7 +46,7 @@
           type="password"
           v-model="registerForm.password"
           auto-complete="off"
-          placeholder="Password"
+          placeholder="Password (6 to 12 characters)"
         ></el-input>
       </el-form-item>
 
@@ -123,15 +125,16 @@ export default {
         },
         rules: {
           username: [
-            {required:true,message:"Username is required",blur:"change"}
+            {required:true,message:"Username is required",trigger:"change",trigger:"blur"},
+            {pattern:/^[\w~!@#$%^&*()_+`\-={}:";'<>?,.\/]{4,15}$/, message:"Username's length should between 4 and 12",trigger:"change",trigger:"blur"},
           ],
           email: [
-            {required:true, message:"Email is required",trigger:"change"},
-            {pattern: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/, message:"Invalid email", trigger:"change"},
+            {required:true, message:"Email is required",trigger:"change",trigger:"blur"},
+            {pattern: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/, message:"Invalid email", trigger:"change",trigger:"blur"},
           ],
           password: [
-            {required:true, message:"Password is required", blur:"change"},
-            {pattern:/^[\w~!@#$%^&*()_+`\-={}:";'<>?,.\/]{6,12}$/, message:"Invalid password",trigger:"change"},
+            {required:true, message:"Password is required", trigger:"change",trigger:"blur"},
+            {pattern:/^[\w~!@#$%^&*()_+`\-={}:";'<>?,.\/]{6,12}$/, message:"Password's length should between 6 and 15",trigger:"change",trigger:"blur"},
             {
             validator:(rule,value,callback)=>{
               this.$refs.registerForm.validateField('confirm');
@@ -141,7 +144,7 @@ export default {
             },
           ],
           confirm: [
-            {required:true, message:"Please confirm your password", trigger:"change"},
+            {required:true, message:"Please confirm your password", trigger:"change",trigger:"blur"},
             {
             validator:(rule,value,callback)=>{
               if(value!= this.registerForm.password) {
@@ -154,7 +157,7 @@ export default {
             },
           ],
           code:[
-            {required:true, message:"Verification code is required", trigger:"change"},
+            {required:true, message:"Verification code is required", trigger:"change",trigger:"blur"},
             {
             validator:(rule,value,callback)=>{
               if(value.toUpperCase() != this.identifyCode.toUpperCase()) {
@@ -180,7 +183,6 @@ export default {
             !/^[\w~!@#$%^&*()_+`\-={}:";'<>?,.\/]{6,12}$/.test(this.registerForm.password)||
             !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(this.registerForm.email) ||
             this.registerForm.password !== this.registerForm.confirm;
-
     }
   },
   methods:{
@@ -237,6 +239,7 @@ img{
   width:80%;
   height:750px;
   margin-top:5px;
+  margin-left:50px;
 }
 .formContainer{
   padding:70px 100px 0 100px;
@@ -246,7 +249,7 @@ a{
   color:#f48840;
 }
 
-h3{
+h3{  
   text-align: center;
 }
 </style>

@@ -24,9 +24,7 @@
                         :file-list="files"
                         :limit="1"
                         accept="image/jpeg"                        
-                    >
-                    <!-- :http-request="upload"
-                        :before-upload="onBeforeUpload" -->
+                    >                    
                     <div v-if="imageUrl" class="img-preview">
                         <img  :src="imageUrl" class="avatar">
                     </div>
@@ -122,7 +120,7 @@
 
             <el-form-item>
                 <el-button type="warning" @click="dialogVisible = true" v-if="edit">Confirm Modify</el-button>
-                <el-button type="warning" @click="dialogVisible = true" v-else>Submit</el-button>
+                <el-button type="warning" @click="confirmForm" v-else>Submit</el-button>
             </el-form-item>
         </el-col>  
         </el-form>
@@ -232,9 +230,8 @@ export default {
     },
     created(){        
         if(this.edit){
-            this.form = this.picture;        
-            this.form.topics = this.topics;
-            console.log(this.form.topics);
+            this.form = this.picture;                    
+            this.form.topics = this.topics;                        
             var name = this.picture.title +".jpg";
             this.files=[{name:name}],
             this.imageUrl = this.GLOBAL.baseUrl+"/images/"+this.picture.url;                       
@@ -252,11 +249,11 @@ export default {
         handleExceed(){
             this.notify("warning","Please upload only one picture once!");
         },
-        handleClose(tag) {
-            this.form.topics.splice(
-                this.form.topics.indexOf(tag),
-                1
-            );
+        handleClose(tag) {                    
+            var position = this.form.topics.indexOf(tag);
+            this.form.topics.splice(position,1);            
+            this.dialogVisible = true;
+            this.dialogVisible = false;
             this.$refs.form.validateField("topic");            
         },
         showInput() {
@@ -339,7 +336,7 @@ export default {
         },        
         confirmForm(){            
             let _this = this;
-            this.$refs[formName].validate(valid => {
+            this.$refs['form'].validate(valid => {
                 if (valid) {
                     if(this.form.nation == "" || this.form.city == ""){
                         this.notify("warning","Please choose nation and city!")
@@ -350,7 +347,7 @@ export default {
                         this.notify("warning","Please upload your picture!")
                         return;
                     }       
-                    this.dialogVisible = true;
+                    this.dialogVisible = true;                    
                 }else {
                 this.$message.error("Wrong submit! Please check the form.");                
                 }

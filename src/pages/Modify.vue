@@ -33,7 +33,7 @@ export default {
             pictureId:this.$route.params.pictureID
         })
         .then(resp=>{            
-            console.log(resp);
+            
             if(resp.status === 200){
                 if(resp.data.message == "no"){
                     this.$router.push("/");
@@ -41,15 +41,14 @@ export default {
                     return;
                 }
 
-                this.picture = resp.data.picture;                
-                                
+                this.picture = resp.data.picture;                                
                 var tmp = JSON.parse(JSON.stringify(resp.data.topics));             
                 var res = [];
                 var len = tmp.length;
                 for(var i = 0; i< len; i++){                    
                     res.push(tmp[i].topic);
-                }                            
-                this.topics = res;
+                }                
+                this.topics = res;                
                 
             }
         })
