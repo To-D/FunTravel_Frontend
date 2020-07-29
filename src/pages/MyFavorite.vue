@@ -81,7 +81,8 @@ export default {
     created(){
         if(!this.$store.state.token){
             this.$router.push("/login");
-            this.notify("warning","Log in first!")
+            this.notify("warning","Log in first!");
+            return;
         }
 
         this.histories = JSON.parse(this.$store.state.histories);        

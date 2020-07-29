@@ -27,6 +27,7 @@ export default {
         if(!this.$store.state.token){
             this.$router.push("/login");
             this.notify("warning","Log in first!")
+            return;
         }
         this.$axios
         .post('/getMyPictures',{
