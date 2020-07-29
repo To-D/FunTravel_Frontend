@@ -36,20 +36,23 @@
                     <span v-else>{{picture.title}}</span>            
                     <ul class="post-info">
                         <li>{{picture.author}}</li>
-                        <li>{{picture.uploadTime.substr(0,10)}}</li>
+                        <li v-if="picture.uploadTime">{{picture.uploadTime.substr(0,10)}}</li>
                         <li>{{picture.collectionCount}} likes</li>
                     </ul>                
                 </div>
                 </div>    
             </el-col>                                                                                
         </div>    
-        <el-pagination        
-            layout="prev, pager, next"
-            :total="pictures.length"
-            :page-size = "pageSize" 
-            :current-page.sync="currentPage"
-            >
-        </el-pagination>
+        
+        <el-row>
+            <el-pagination        
+                layout="prev, pager, next"
+                :total="pictures.length"
+                :page-size = "pageSize" 
+                :current-page.sync="currentPage"
+                >
+            </el-pagination>
+        </el-row>
     </div>
 
     <el-dialog
@@ -63,7 +66,6 @@
             <el-button type="danger" @click="deletePicture">Confirm</el-button>
         </span>
     </el-dialog>
-
 </div>
 </template>
 <script>

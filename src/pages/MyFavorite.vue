@@ -85,8 +85,7 @@ export default {
             this.notify("warning","Log in first!")
         }
 
-        this.histories = JSON.parse(this.$store.state.histories);
-        // console.log("myfavorite:"+this.histories);
+        this.histories = JSON.parse(this.$store.state.histories);        
 
         this.$axios
         .post('/getMyFavorite',{

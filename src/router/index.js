@@ -9,8 +9,7 @@ import MyFavorite from "@/pages/MyFavorite"
 import Upload from "@/pages/Upload"
 import Modify from "@/pages/Modify"
 import MyPictures from "@/pages/MyPictures"
-import test from "@/components/ShowPicture"
-
+import MyFriends from "@/pages/MyFriends"
 
 Vue.use(Router)
 
@@ -19,42 +18,52 @@ export default new Router({
     routes: [{
         path: '/',
         name: "Home",
-        component: Home
+        component: Home,
+        meta: { title: "FunTravel" }
     }, {
         path: '/login',
         name: "Login",
-        component: Login
+        component: Login,
+        meta: { title: "FunTravel-Log in" }
     }, {
         path: '/register',
         name: "Register",
-        component: Register
+        component: Register,
+        meta: { title: "FunTravel-Register" }
     }, {
         path: "/picture-detail/:pictureID",
         name: "PictureDetail",
-        component: PictureDetail
+        component: PictureDetail,
+        meta: { title: "FunTravel-PictureDetail" }
     }, {
         path: "/search",
         name: "Search",
-        component: Search
+        component: Search,
+        meta: { title: "FunTravel-Search" }
     }, {
         path: "/my-favorite",
         name: "MyFavorite",
-        component: MyFavorite
+        component: MyFavorite,
+        meta: { title: "FunTravel-MyFavorite" }
     }, {
         path: '/upload',
         name: "Upload",
-        component: Upload
+        component: Upload,
+        meta: { title: "FunTravel-Upload" }
     }, {
         path: '/modify/:pictureID',
         name: "Modify",
-        component: Modify
+        component: Modify,
+        meta: { title: "FunTravel-Modify" }
     }, {
         path: '/my-pictures',
         name: "MyPictures",
-        component: MyPictures
+        component: MyPictures,
+        meta: { title: "FunTravel-MyPictures" }
     }, {
-        path: "/test",
-        name: "test",
-        component: test
+        path: "/my-friends",
+        name: "MyFriends",
+        component: MyFriends,
+        meta: { title: "FunTravel-MyFriends" }
     }]
 })

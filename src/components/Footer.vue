@@ -42,7 +42,7 @@ footer{
     margin-top: 50px;
     text-align: center;
     background-color: #20232e;
-    padding: 40px 0px;
+    padding: 40px 0px;    
 }
 
 footer h2{

@@ -1,7 +1,15 @@
 import Vue from 'vue'
 import App from './App'
-import router from './router'
 import store from './store'
+
+// router
+import router from './router'
+router.beforeEach((to, from, next) => {
+    if (to.meta.title) {
+        document.title = to.meta.title
+    }
+    next()
+})
 
 //element-ui
 import ElementUI from 'element-ui'

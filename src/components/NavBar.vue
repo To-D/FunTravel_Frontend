@@ -24,7 +24,8 @@
                         
             <el-submenu index="3" v-else>
                 <template slot="title">
-                    <el-badge :is-dot="true" class="item"  >
+                    <span v-if="noMessage">{{username}}</span>
+                    <el-badge :is-dot="true" class="item" v-else>
                         {{username}}
                     </el-badge>
                 </template>                
@@ -32,8 +33,10 @@
                 <el-menu-item index="3-2"><router-link to="/upload">Upload</router-link></el-menu-item>
                 <el-menu-item index="3-3"><router-link to="/my-pictures">My pictures</router-link></el-menu-item>                
                 <el-menu-item index="3-4">
-                    <el-badge :is-dot="true" class="item">
-                    <router-link to="/MyFriends">My Friends</router-link>
+                    <router-link to="/my-friends" v-if="noMessage">My Friends</router-link>
+
+                    <el-badge :is-dot="true" class="item" v-else>
+                        <router-link to="/my-friends">My Friends</router-link>
                     </el-badge>
                 </el-menu-item>                
                 <el-menu-item index="3-5" @click="dialogVisible = true">Logout</el-menu-item>
@@ -69,6 +72,7 @@ export default {
         isLogin: false,
         username: "USERNAME",
         dialogVisible:false,
+        noMessage:true,
       };
     },
     created(){
@@ -96,6 +100,23 @@ export default {
                 this.activeIndex='3-4';
                 break;
         }
+
+        this.$axios
+        .post("/hasMessage",{
+            username:this.$store.state.username,
+        })
+        .then(resp=>{
+            if(resp.status === 200){
+                if(resp.data == "yes"){
+                    this.noMessage = false;
+                }
+            }
+        })
+        .catch(error=>{
+            console.log(error);
+            this.notify("error","Sorry for something wrong!");            
+        })
+
     },
     methods:{
         logout(){
