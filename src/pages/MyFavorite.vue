@@ -85,7 +85,7 @@ export default {
             return;
         }
 
-        this.histories = JSON.parse(this.$store.state.histories);        
+        this.histories = JSON.parse(this.$store.state.histories);      
 
         this.$axios
         .post('/getMyFavorite',{

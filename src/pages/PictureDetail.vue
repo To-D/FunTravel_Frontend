@@ -124,7 +124,8 @@ export default {
             disable:this.$store.state.username?false:true,     
             isCollected:false, 
             topics:[],
-            isLogin:false,
+            isLogin:false,        
+            histories:[],
         }
     },
     computed:{
@@ -175,6 +176,7 @@ export default {
                 if(resp.status === 200){
                     if(!resp.data.picture){
                         this.$router.push('/error');
+                        return;
                     }
                     this.picture = resp.data.picture;                         
                     this.comments = resp.data.picture.comments;                                        
@@ -186,39 +188,37 @@ export default {
                     })
                     .then(resp=>{                           
                         if(resp.status === 200){                
-                            this.isCollected = resp.data;                            
-                            // this.$store.state.histories = null;
-                            // store browse history
-                            var tmp = this.$store.state.histories;                            
-                            if(tmp == null){
-                                var history = [{title:this.picture.title,id:this.picture.id}];          
-                                this.$store.commit("addHistory", JSON.stringify(history));
-                            }else{
-                                var histories = JSON.parse(tmp);
-                                var len = histories.length;
-
-                                // delete duplicate
-                                for(var i = 0; i<len; i++){                                    
-                                    if(histories[i].id == this.picture.id){
-                                        histories.splice(i,1);
-                                    }
-                                }                                
-
-                                var history = {title:this.picture.title,id:this.picture.id};                                
-                                histories.splice(0,0,history);
-                                
-                                len = histories.length;
-                                // delete exceed
-                                if(len>10){
-                                    histories = histories.slice(0,len-1);
-                                }                                
-                                this.$store.commit("addHistory", JSON.stringify(histories));
-                            }
+                            this.isCollected = resp.data;                                                        
                         }
                     })
                     .catch(error=>{
                         console.log(error);
                     })
+
+                    // store browse history
+                    // this.$store.state.histories = null;
+                    let tmp = JSON.parse(this.$store.state.histories);                                                        
+                    if(tmp == null){                        
+                        let history = [{'title':this.picture.title,'id':this.picture.id}];          
+                        this.$store.commit("addHistory", JSON.stringify(history));
+                    }else{                                                                                  
+                        let len = tmp.length;                                                                                                
+                        // delete duplicate
+                        for(let i in tmp){
+                            if(tmp[i].id == this.picture.id){
+                                tmp.splice(i,1);
+                            }
+                        }                                
+                        let history = {'title':this.picture.title,'id':this.picture.id};
+                        tmp.splice(0,0,history);
+                            
+                        len = tmp.length;
+                        // delete exceed
+                        if(len > 10){
+                            tmp = tmp.slice(0,len-1);
+                        }                                                                
+                        this.$store.commit("addHistory", JSON.stringify(tmp));
+                    }
                 }
             })
             .catch(error=>{

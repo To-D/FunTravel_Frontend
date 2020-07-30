@@ -12,7 +12,7 @@
             <el-col :span="8" v-for="picture in pictures.slice((currentPage- 1)*pageSize,currentPage*pageSize)" :key='picture.id' >
                 <div class="container" >
                 <div class="img_container">
-                    <img :src="getImgSrc(picture.url)" @click="toDetail(picture.id)"/>
+                    <img :src="getImgSrc(picture.url)" @click="toDetail(picture.id)" :alt="picture.title"/>
                 </div>
                 <div class="text_container">
 

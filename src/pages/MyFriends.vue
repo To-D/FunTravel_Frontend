@@ -75,7 +75,7 @@
                     >
                     <el-card>
                         <div>
-                        <img :src="getImgSrc(picture.url)" class="image">
+                        <img :src="getImgSrc(picture.url)" class="image" :alt="picture.title" @click="toDetail(picture.id)" />
                         </div>
                         <div class="text_container">
                             <span >{{picture.title}}</span>            
@@ -358,8 +358,7 @@ export default {
                 username:this.$store.state.username,            
             })
             .then(resp=>{
-                if(resp.status === 200){
-                    console.log(resp);
+                if(resp.status === 200){                    
                     this.user = resp.data.user;                    
                     this.user.registerTime = this.user.registerTime.substr(0,10);
                     this.presentRole = this.user;
@@ -487,6 +486,10 @@ footer{
     height: 200px;
     display: block;
   }
+
+img{
+    cursor: pointer;
+}
 
 .text_container .post-info li{
     display: inline-block;

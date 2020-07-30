@@ -143,8 +143,7 @@ export default {
           userIdentifier: this.loginForm.user,
           password: this.$md5(this.loginForm.password),
         })
-        .then(resp => {
-          console.log(resp);
+        .then(resp => {          
           if (resp.status === 200) {
             //Save token
              this.$store.commit("login", resp.data);
