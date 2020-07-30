@@ -11,6 +11,8 @@ import Modify from "@/pages/Modify"
 import MyPictures from "@/pages/MyPictures"
 import MyFriends from "@/pages/MyFriends"
 
+import Chat from "@/components/Chat"
+
 Vue.use(Router)
 
 export default new Router({
@@ -65,5 +67,10 @@ export default new Router({
         name: "MyFriends",
         component: MyFriends,
         meta: { title: "FunTravel-MyFriends" }
+    }, {
+        path: "/chat",
+        name: "Chat",
+        component: Chat,
+        meta: { title: "FunTravel-Chat" }
     }]
 })

@@ -14,9 +14,9 @@
             <el-col :span="12" v-if="isLogin">
                 <ul class="map">
                   <li><router-link to="/upload">Upload</router-link></li>
-                  <li><router-link to="/myPictures">My Pictures</router-link></li>
-                  <li><router-link to="/myFavorite">My Favorite</router-link></li>
-                  <li><router-link to="/myFriends">My Friends</router-link></li>
+                  <li><router-link to="/my-pictures">My Pictures</router-link></li>
+                  <li><router-link to="/my-favorite">My Favorite</router-link></li>
+                  <li><router-link to="/my-friends">My Friends</router-link></li>
                 </ul>
             </el-col>
         </el-col>

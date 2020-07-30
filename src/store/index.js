@@ -7,6 +7,7 @@ export default new Vuex.Store({
         token: localStorage.getItem('token') || null,
         username: localStorage.getItem('username') || null,
         histories: localStorage.getItem('histories') || null,
+        toUser: localStorage.getItem("toUser") || null, // 聊天对象
     },
     mutations: {
         login(state, userInfo) {
@@ -28,6 +29,10 @@ export default new Vuex.Store({
         addHistory(state, histories) {
             localStorage.setItem('histories', histories)
             state.histories = histories;
+        },
+        changeToUser(state, toUser) {
+            localStorage.setItem('toUser', toUser)
+            state.toUser = toUser;
         }
     },
     actions: {}

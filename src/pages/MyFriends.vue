@@ -32,16 +32,21 @@
             </el-menu-item> 
 
             <div v-if="friends">
-                <el-menu-item                 
-                    v-for="friend in friends"
-                    :key="friend.id"
+                <div  v-for="friend in friends"
+                    :key="friend.id">
+                <el-col :span="18" >       
+                <el-menu-item                                    
                     :index="friend.username"
                      @click="changeRole(friend)"
                 >
                     <i class="el-icon-user-solid"></i>
-                    <span slot="title">{{friend.username}}</span>
-                    <!-- <i class="el-icon-chat-round"></i> -->
-                </el-menu-item>    
+                    <span slot="title">{{friend.username}}</span>                    
+                </el-menu-item>                                    
+                </el-col>
+                <el-col :span="4">                    
+                    <span><i class="el-icon-chat-round chatButton" @click="chat(friend.username)"></i></span>
+                </el-col>
+                </div>
             </div>                        
         </el-menu>
      </el-aside>
@@ -294,8 +299,7 @@ export default {
                         username: this.$store.state.username,                    
                         searchName:this.form.username,
                     })
-                    .then(resp => {
-                        console.log(resp);
+                    .then(resp => {                        
                     if (resp.status === 200) {
                         this.loading = false;                        
                         if (resp.data.alreadyFriend) {
@@ -443,6 +447,10 @@ export default {
                 console.log(error);
                 this.reload();
             })
+        },
+        chat(toUserName){
+            this.$store.commit("changeToUser", toUserName);
+            window.open('chat', 'newwindow', 'height=650, width=400, top=50, left=500, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
         }
     }
 }
@@ -451,17 +459,22 @@ export default {
 footer{
     margin-top:5px;
 }
+.chatButton{
+    padding:15px;
+    margin:5px;
+    cursor: pointer;
+}
 .outer-container{
     margin-top:48px;
 }
 .profile{
-    height:240px;
+    height:270px;
     line-height: 3;
-    padding:20px;
-    
+    padding:20px;    
 }
 .profile h5{
     text-align: center;
+    margin:10px;
 }
 .profile i{
     color:#f48840;
@@ -516,7 +529,7 @@ footer{
 .error-container{    
     background-color: #f7f7f7;
     padding:100px;
-    margin:0px 40px;
+    margin:20px 40px;
 }
 </style>
 
