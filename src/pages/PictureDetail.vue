@@ -203,7 +203,7 @@ export default {
                         this.$store.commit("addHistory", JSON.stringify(history));
                     }else{                                                                                  
                         let len = tmp.length;                                                                                                
-                        // delete duplicate
+                        // delete duplicate                        
                         for(let i in tmp){
                             if(tmp[i].id == this.picture.id){
                                 tmp.splice(i,1);

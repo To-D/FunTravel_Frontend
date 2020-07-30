@@ -224,7 +224,25 @@
 
 ​	11.2.2 若用户设置不可查看,则给予提示
 
+### 12. 聊天窗口
 
+12.1 点击用户名后的聊天标签可以打开与该用户的聊天窗口
+
+12.2 各种提示消息
+
+​	12.2.1 进入聊天窗口提示对面的在线状态
+
+​	12.2.2 用户离开聊天窗口要给予提示
+
+​	12.2.3 用户在线但在和别人聊天的提示
+
+​			12.2.3.1 提示当前用户对方在和别人聊天
+
+​			12.2.3.2 提示对方当前用户在等待他
+
+12. 3下方输入框内输入信息,点击发送即可发送消息
+
+## 
 
 ## 三、项目设计
 
@@ -330,29 +348,41 @@
     <img src="\mdImages\image-20200729163824886.png" alt="image-20200729163824886" style="zoom:80%;" />
     
     <center>图 9 我的好友页</center>
-
-
+    
+  - **聊天窗口**
+  
+    <img src="C:\Users\12444\AppData\Roaming\Typora\typora-user-images\image-20200730205244424.png" alt="image-20200730205244424" style="zoom: 67%;" />
+    
+    <center>图 10 聊天窗口</center>
+    
+    
 
 ### 后端
 
-#### 1. 技术选择
+#### 1. 技术选型
 
 - 后端采用`Spring Boot`框架搭建而成
 - 数据库使用`MySQL`，使用`JPA`访问和修改
 
-#### 2. 业务模块划分
+#### 2. 项目结构
 
-<img src="\mdImages\image-20200729164756795.png" alt="image-20200729164756795" style="zoom:80%;" />
+<img src="C:\Users\12444\AppData\Roaming\Typora\typora-user-images\image-20200730205438200.png" alt="image-20200730205438200" style="zoom:80%;" />
 
-<center>图 10 后端项目结构</center>
+<center>图 11 后端项目结构</center>
 
-本次项目后端比较简单，业务基本可以划分为User相关和Picture相关两块，外加一个token的管理，后端我一共分成了三个模块
+- `config`：目录下是本项目的一些整体配置，AppConfigurer配置了图片的虚拟路径，`WebSocketConfig`封装了对`WebSocket`的配置
+- `controller`：controller层负责与前端交互，主要有用户相关（UserController）、图片相关（PictureController）和聊天相关（ChatController），request目录下放置了一些常用的请求的请求体实体。
+- `domain`：domain下放置着下项目中的一些实体类。
+- `repository`：repository目录下是项目的`DAO`层，负责与数据库交互，执行增删改查操作。
+- `security`：securuty是与安全相关的配置，主要使用的是token，用户用户身份的校验。
+- `service`：service层提供一些具体的服务，与controller对应。
+
+本次项目后端比较简单，基础业务基本可以划分为User相关和Picture相关两块，进阶业务为聊天功能，外加一个token的管理，后端我一共分成了四个模块。
 
 - `JWT`：登录状态的维持使用`JWT`生成token来解决，当用户登录成功时，后端返回 token 值，前端保存在本地后在后面的每次请求中都在 header 中带着 token 进行请求。后端重写过滤器，在过滤器中解析 token 值并将 token 中带的对象放到登录用户中，让 security 认为请求已经是在登录状态下进行。
 - `User`：主要负责与用户相关的操作，如基本的登录、注册，以及互加好友功能。
 - `Picture`：负责与图片有关的操作，如最新、最热图片的获取和搜索等功能。
-
-JWT的功能相对独立，且与Security关联比较重，所以放置在了security包中，user和picture各自拥有一个Controller和一个Service, Controller层主要负责与前端对接，Service层提供各种具体的服务。
+- `Chat`：主要负责提供用户间聊天的服务。通过websocket实现，因为本次没有要求实现消息的离线操作，所以没有加入数据库的部分。
 
 #### 2. 数据库设计
 
@@ -360,7 +390,7 @@ JWT的功能相对独立，且与Security关联比较重，所以放置在了sec
 
 ![image-20200729165156465](\mdImages\image-20200729165156465.png)
 
-<center>图 11 项目数据库结构</center>
+<center>图 12 项目数据库结构</center>
 
 项目使用一个`fun_travel`库，包含`users`，`pictures`，`comments`, `messages`, `topics`, `pictures_topics`，`pictures_comments`，`users_friends`，`users_collections`八个表。	
 
@@ -420,7 +450,7 @@ Long|VARCHAR
 
 ![image-20200729172416939](\mdImages\image-20200729172416939.png)
 
-<center>图 12 数据表之间的关系</center>
+<center>图 13 数据表之间的关系</center>
 
 ### 接口约定
 
@@ -554,7 +584,7 @@ Long|VARCHAR
 
     
 
-## 四、项目实现难点
+## 四、项目实现的重难点
 
 这一部分，我将介绍我的一些功能模块的实现思路、碰到的一些麻烦以及我的解决办法。
 
@@ -580,31 +610,77 @@ Long|VARCHAR
 
 #### 4. 消息提醒功能
 
-当用户收到新的好友消息时，用户在其他页面是无法知晓的，这样会带来不好的用户体验。因此我在navbar组件中加入了一个红点提醒，当有消息时，用户名那一项会出现红点，鼠标悬浮在上面时，会看到MyFriends表单项出现红点，再点击MyFriends进入我的好友页面，就可以通过左边好友列表中的Message按钮来处理消息。其内部实现机制是navbar组件每次创建时，都会像后端的`/hasMessage`接口发送一个请求，如果返回true，它就会出现红点提示。
+当用户收到新的好友消息时，用户在其他页面是无法知晓的，这样会带来不好的用户体验。因此我在navbar组件中加入了一个红点提醒，当有消息时，用户名那一项会出现红点，鼠标悬浮在上面时，会看到MyFriends表单项出现红点，再点击MyFriends进入我的好友页面，就可以通过左边好友列表中的Message按钮来处理消息，这样就形成了一种导航式的指引。其内部实现机制是navbar组件每次创建时，都会像后端的`/hasMessage`接口发送一个请求，如果返回true，它就会出现红点提示，而只有在用户进入MyFriends页时才会向后台请求获得message。
 
 <img src="\mdImages\image-20200729183429686.png" alt="image-20200729183429686" style="zoom:80%;" />
 
-<center>图 13 消息提醒引导</center>
+<center>图 14 消息提醒引导</center>
 
 #### 5. 修改轮播图插件源码
 
-本项目的轮播图使用的不是element-ui提供的轮播图插件，因为我觉得那个太普通了，而且很丑。我选择的是`owl-carousel`，一个基于jquery的轮播图插件，它提供了一个vue的版本，但是这个版本年久失修，有很多bug，导致一直没办法达到我想要的效果，因此我拆开了它的源码，尽管我找到了bug所在，但是不管我怎么修改，用的时候还是老样子。后来我查阅资料才知道，原来在项目引入的是它打包后的生产版本js文件，因此我把这个组件单独拿出来建了一个项目，重新打包引入，修复了问题。
+本项目的轮播图使用的不是element-ui提供的轮播图插件，因为我觉得那个太普通了，而且很丑。我选择的是`owl-carousel`，一个基于jquery的轮播图插件，它提供了一个vue的版本，但是这个版本年久失修，有很多bug，导致一直没办法达到我想要的效果，因此为了满足需要我拆开了它的源文件。尽管我找到了bug所在，但是不管我怎么修改，在项目中使用时还是老样子。通过大量查阅资料，我才知道vue引入组件时，实际导入的是该组件打包后的生产版本js文件，因此我把这个组件单独拿出来建了一个项目，修改了bug，重新打包引入，修复了问题。
 
 #### 6. 好友功能的各种细节
 
 关于好友功能，实现的时候才发现有非常多的细节，拿搜索举例来说
 
-- 理论上说用户不能够搜索自己的用户名，因为那是没有意义的。
-- 用户应该不能搜索已经和自己成为好友的用户的用户名
-- 用户已经向另一名用户发送了好友请求，那么再次请求应该给出提示
+>- 理论上说用户不能够搜索自己的用户名，因为那是没有意义的。
+>- 用户应该不能搜索已经和自己成为好友的用户的用户名
+>- 用户已经向另一名用户发送了好友请求，那么再次请求应该给出提示
 
 这些细节我通过前后端的分解各自实现了，用户填入的用户名会首先和自己比对，如果是一样的则直接提醒用户，不请求后端。后端负责的任务除了找出搜索的用户外，还需要查看搜索的用户的消息列表是不是已经有了这条好友申请消息，此外还要比对用户的好友列表，看看用户是不是在搜索一个已经成为自己好友的用户。
 
 #### 7. 足迹的保存
 
-足迹的保存我是通过在localStorage中存储实现的，但是localStorage只能存储字符串，因此我使用了`JSON.parse`和`JSON.stringify`两个方法，分别负责将字符串转化为数组和把数组转化为字符串。或许将足迹存储在数据库中也是一个好办法，但是出于效率考虑，我还是选择在前端解决它。
+足迹的保存我是通过在localStorage中存储实现的，但是localStorage只能存储字符串，因此我使用了`JSON.parse`和`JSON.stringify`两个方法，分别负责将字符串转化为数组和把数组转化为字符串。
 
+但是不知道为什么，在我通过`JSON.parse`获得数组后，后续的操作会对前面的部分造成影响，导致前面的操作失败，以我的代码为例：
 
+<img src="C:\Users\12444\AppData\Roaming\Typora\typora-user-images\image-20200730202656968.png" alt="image-20200730202656968" style="zoom:80%;" />
+
+<center>图 15 令人迷惑的错误</center>
+
+我在JSON.parse刚解析完时打印tmp，但有的时候，控制台显示的数组已经被删除了重复项，可是length还是最初的length，导致在<u>delete duplicate</u>时，反而删除不掉重复项，这不得不说让我非常迷惑。
+
+```js
+let histories = JSON.parse(this.$store.state.histories);
+console.log(historeis);
+console.log(this.$store.state.histories); // 打印出来这两个值不一样
+```
+
+这确实是超出了我认知的一件事，最后我选择改变遍历的方式，使用`for(let i in tmp)`让程序自己去动态获得数组长度，解决了这个问题，但是我并没有看透这背后的原因。
+
+#### 8. WebSocket实现在线聊天
+
+在线聊天是利用websocket实现的，可以参考的资料大多是多对多的聊天室，但是本项目需要使用的而显然是一对一的聊天，搞清楚了websocket的使用之后，我自己写了一个一对一的悬浮页聊天室。
+
+- 前端
+
+  - 在聊天的入口上，我选择在好友列表中加入一个聊天气泡的图标，比较符合用户的使用习惯。用户点击这个icon，就会弹出一个固定大小的页面作为单独的聊天窗口，用户可以一边和其他用户聊天，一边继续使用网站。
+
+  <img src="C:\Users\12444\AppData\Roaming\Typora\typora-user-images\image-20200730210931474.png" alt="image-20200730210931474" style="zoom:80%;" />
+
+  <center>图 16 聊天窗口的入口</center>
+
+  - 打开聊天页后，聊天页会建立一个与后端websocket的连接，传递两个参数sendUser和toUser，分别对应聊天的双方
+  - 之后用户每次发送消息只需要通过ws.send()将用户消息传给后端即可。
+  - 接收消息则通过JSON.parse解析消息，获取消息信息，并根据消息的种类分别用不同的UI展示。
+
+- 后端
+
+  - 后端首先加入了websocket的依赖，进行了必要的配置
+
+  - 之后我创建了ChatController类作为与前端交互的接口。这个类的UML图如下
+
+    <img src="C:\Users\12444\AppData\Roaming\Typora\typora-user-images\image-20200730211925111.png" alt="image-20200730211925111" style="zoom:80%;" />
+
+    <center>图 17 ChatController类UML</center>
+    
+  - 这个类是websocket的核心，封装了一次聊天的所有信息，包括session、发送消息的用户，接受消息的用户，chatMap是一个中央池，所有的会话在连接后都会被加入这个池中，退出时则会从这个池中删除。与此同时，这个类也是一个消息的集中处理中心，`onOpen`方法在用户连接websocket时调用，它会检测toUser的状态，包括是否在线，是否在与当前用户聊天，并分别给双方发送提醒的消息。`onClose`方法在用户关闭连接时调用，会将对应的chatController从chatmap里删除，然后通知尚未下线的一方。`onMessage`处理用户发来的消息，做一个转发。`onError`在出错时调用，打印错误。
+  
+  - 后台还建了一个message的封装类，包括消息的内容，发送方，发送时间，以及种类。种类有两个，“message”表示这是一条聊天消息，“notify”表示这是一条通知消息。
+  
+    <img src="C:\Users\12444\AppData\Roaming\Typora\typora-user-images\image-20200730213050125.png" alt="image-20200730213050125" style="zoom:80%;" />
 
 ## 五、个人总结
 
