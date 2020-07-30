@@ -43,14 +43,10 @@ axios.interceptors.response.use(
     },
     error => {
         if (error) {
-            this.notify("error", "Sorry for some error.");
-            // 清除token 如果不是register/login, 跳转至login
-            store.commit('logout')
             router.currentRoute.path !== '/login' &&
                 router.currentRoute.path !== '/register' &&
                 router.replace({
-                    path: '/login',
-                    query: { redirect: router.currentRoute.path }
+                    path: '/error',
                 })
         }
         return Promise.reject(error.response.data)

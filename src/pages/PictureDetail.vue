@@ -173,6 +173,9 @@ export default {
             })
             .then(resp=>{                
                 if(resp.status === 200){
+                    if(!resp.data.picture){
+                        this.$router.push('/error');
+                    }
                     this.picture = resp.data.picture;                         
                     this.comments = resp.data.picture.comments;                                        
                     this.topics = resp.data.topics;

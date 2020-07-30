@@ -468,7 +468,7 @@ footer{
     margin-top:48px;
 }
 .profile{
-    height:270px;
+    height:250px;
     line-height: 3;
     padding:20px;    
 }

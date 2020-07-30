@@ -99,6 +99,9 @@ export default {
             case "MyFriends":
                 this.activeIndex='3-4';
                 break;
+            default:
+                this.activeIndex='';
+                break;
         }
         if(this.isLogin){
             this.$axios

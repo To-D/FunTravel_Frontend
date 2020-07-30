@@ -34,11 +34,14 @@ export default {
         })
         .then(resp=>{            
             
-            if(resp.status === 200){
+            if(resp.status === 200){                
                 if(resp.data.message == "no"){
                     this.$router.push("/");
-                    this.notify("waning","Sorry, you are not the uploader!")
+                    this.notify("warning","Sorry, you are not the uploader!")
                     return;
+                }
+                if(resp.data.message == "notfound"){
+                    this.$router.push("/error")
                 }
 
                 this.picture = resp.data.picture;                                

@@ -10,7 +10,7 @@ import Upload from "@/pages/Upload"
 import Modify from "@/pages/Modify"
 import MyPictures from "@/pages/MyPictures"
 import MyFriends from "@/pages/MyFriends"
-
+import Error from "@/pages/Error"
 import Chat from "@/components/Chat"
 
 Vue.use(Router)
@@ -18,6 +18,11 @@ Vue.use(Router)
 export default new Router({
     mode: 'history',
     routes: [{
+        path: '*',
+        name: "Error",
+        component: Error,
+        meta: { title: "Error" }
+    }, {
         path: '/',
         name: "Home",
         component: Home,
