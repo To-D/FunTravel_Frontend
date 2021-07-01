@@ -141,7 +141,7 @@ export default {
   },
   methods:{
     getImgSrc(url){
-      return this.GLOBAL.baseUrl +"/images/"+ url;
+      return this.GLOBAL.baseUrl + "/" + url;
     },
     toDetail(id){
       this.$router.push("/picture-detail/"+id)

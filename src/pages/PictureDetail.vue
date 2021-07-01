@@ -148,7 +148,7 @@ export default {
     },
     methods:{
         getImgSrc(url){
-            return this.GLOBAL.baseUrl + "/images/" + url;
+            return this.GLOBAL.baseUrl + "/" + url;
         },
         postComment(){
             this.$axios
